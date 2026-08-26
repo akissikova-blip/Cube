@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#4DA6FF" />
+<title>Кубо-школа</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%234DA6FF%22/><text x=%2250%25%22 y=%2262%25%22 font-size=%2260%22 text-anchor=%22middle%22>🧱</text></svg>" />
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Manrope:wght@400;600;700;800&display=swap');
+  html, body { margin:0; padding:0; background:#BEEBFF; }
+  .font-display { font-family: 'Comfortaa', cursive; font-weight:700; }
+  .font-body { font-family: 'Manrope', sans-serif; }
+  @keyframes pop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .pop-in { animation: pop 0.2s ease-out; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  .bob { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes wiggle { 0%,100% { transform: rotate(0deg); } 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+  .wiggle { animation: wiggle 0.4s ease-in-out; }
+  .banner-warning { position:absolute; top:-2.5rem; left:0; right:0; text-align:center; font-size:0.75rem; color:#8a5a00; background:#FFF3CD; border-radius:0.5rem; padding:0.4rem 0.6rem; border:2px solid #1b1b1b; }
+  .pixel-card { background:#fff; border:3px solid #1b1b1b; border-radius:10px; box-shadow:5px 5px 0 rgba(27,27,27,0.85); }
+  .pixel-btn { border:3px solid #1b1b1b; border-radius:8px; box-shadow:4px 4px 0 #1b1b1b; transition: transform .06s ease, box-shadow .06s ease; }
+  .pixel-btn:active { transform: translate(3px,3px); box-shadow:1px 1px 0 #1b1b1b; }
+  .pixel-btn:disabled { opacity:.55; }
+  .bg-blocks { background-image: linear-gradient(0deg, rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px); background-size: 26px 26px; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-family:sans-serif;color:#1b1b1b;padding:24px;text-align:center;">
+    <div style="font-size:48px;">🧱</div>
+    <p>Кубо-школа загружается…</p>
+    <p style="font-size:12px;color:#5a5a5a;">Если это сообщение не исчезает, откройте страницу в браузере Safari/Chrome по ссылке (не через «Быстрый просмотр» файла) и проверьте интернет.</p>
+  </div>
+</div>
+<div id="boot-error" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#FFEFEC;color:#7a1f12;font-family:monospace;font-size:11px;padding:10px;white-space:pre-wrap;max-height:40vh;overflow:auto;"></div>
+<script>
+  window.addEventListener("error", function (e) {
+    var box = document.getElementById("boot-error");
+    if (box) {
+      box.style.display = "block";
+      box.textContent = (box.textContent ? box.textContent + "\n" : "") + "Ошибка: " + e.message;
+    }
+  });
+</script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useCallback } = React;
+
+/* ---------------------------------------------------------
+   Данные: банки заданий для 1 класса
+--------------------------------------------------------- */
+
+const MATH_BANK = [
+  { id: "m1", prompt: "Сколько будет 2 + 3?", options: ["4", "5", "6"], correct: 1 },
+  { id: "m2", prompt: "Сколько будет 7 − 4?", options: ["2", "3", "4"], correct: 1 },
+  { id: "m3", prompt: "Какое число больше?", options: ["5", "8"], correct: 1 },
+  { id: "m4", prompt: "Сосчитай: 🍎 🍎 🍎 🍎 — сколько яблок?", options: ["3", "4", "5"], correct: 1 },
+  { id: "m5", prompt: "Какое число идёт сразу после 9?", options: ["8", "10", "11"], correct: 1 },
+  { id: "m6", prompt: "Сколько будет 5 + 5?", options: ["9", "10", "11"], correct: 1 },
+  { id: "m7", prompt: "Какое число меньше?", options: ["3", "7"], correct: 0 },
+  { id: "m8", prompt: "Сколько будет 10 − 6?", options: ["3", "4", "5"], correct: 1 },
+  { id: "m9", prompt: "Сколько сторон у квадрата?", options: ["3", "4", "5"], correct: 1 },
+  { id: "m10", prompt: "Сосчитай: 🐝 🐝 🐝 — сколько пчёл?", options: ["2", "3", "4"], correct: 1 },
+  { id: "m11", prompt: "Сколько будет 4 + 4?", options: ["6", "7", "8"], correct: 2 },
+  { id: "m12", prompt: "Сколько будет 9 − 3?", options: ["5", "6", "7"], correct: 1 },
+  { id: "m13", prompt: "Сколько всего пальцев на одной руке?", options: ["4", "5", "6"], correct: 1 },
+  { id: "m14", prompt: "Какое число идёт перед числом 6?", options: ["4", "5", "7"], correct: 1 },
+  { id: "m_l2_1", prompt: "Сколько будет 12 + 5?", options: ["16", "17", "18"], correct: 1, level: 2 },
+  { id: "m_l2_2", prompt: "Сколько будет 18 − 9?", options: ["8", "9", "10"], correct: 1, level: 2 },
+  { id: "m_l2_3", prompt: "У Айгуль было 14 конфет, она съела 6. Сколько осталось?", options: ["7", "8", "9"], correct: 1, level: 2 },
+  { id: "m_l2_4", prompt: "Сколько будет 6 + 7?", options: ["12", "13", "14"], correct: 1, level: 2 },
+  { id: "m_l2_5", prompt: "Какое число на 10 больше числа 5?", options: ["10", "15", "20"], correct: 1, level: 2 },
+  { id: "m_l2_6", prompt: "Сколько будет 20 − 8?", options: ["10", "11", "12"], correct: 2, level: 2 },
+];
+
+const KAZAKH_WORDS = [
+  { id: "k_mysyq", word: "Мысық", emoji: "🐱", ru: "кошка" },
+  { id: "k_it", word: "Ит", emoji: "🐶", ru: "собака" },
+  { id: "k_qoyan", word: "Қоян", emoji: "🐰", ru: "заяц" },
+  { id: "k_aiu", word: "Аю", emoji: "🐻", ru: "медведь" },
+  { id: "k_qyzyl", word: "Қызыл", emoji: "🔴", ru: "красный" },
+  { id: "k_kok", word: "Көк", emoji: "🔵", ru: "синий" },
+  { id: "k_sary", word: "Сары", emoji: "🟡", ru: "жёлтый" },
+  { id: "k_aq", word: "Ақ", emoji: "⚪", ru: "белый" },
+  { id: "k_kun", word: "Күн", emoji: "☀️", ru: "солнце" },
+  { id: "k_su", word: "Су", emoji: "💧", ru: "вода" },
+  { id: "k_nan", word: "Нан", emoji: "🍞", ru: "хлеб" },
+  { id: "k_alma", word: "Алма", emoji: "🍎", ru: "яблоко" },
+  { id: "k_uy", word: "Үй", emoji: "🏠", ru: "дом" },
+  { id: "k_bir", word: "Бір", emoji: "1️⃣", ru: "один" },
+  { id: "k_eki", word: "Екі", emoji: "2️⃣", ru: "два" },
+  { id: "k_ush", word: "Үш", emoji: "3️⃣", ru: "три" },
+  { id: "k_l2_tau", word: "Тау", emoji: "🏔️", ru: "гора", level: 2 },
+  { id: "k_l2_orman", word: "Орман", emoji: "🌲", ru: "лес", level: 2 },
+  { id: "k_l2_juldyz", word: "Жұлдыз", emoji: "⭐", ru: "звезда", level: 2 },
+  { id: "k_l2_balyq", word: "Балық", emoji: "🐟", ru: "рыба", level: 2 },
+  { id: "k_l2_gul", word: "Гүл", emoji: "🌸", ru: "цветок", level: 2 },
+  { id: "k_l2_kitap", word: "Кітап", emoji: "📖", ru: "книга", level: 2 },
+];
+
+const ENGLISH_WORDS = [
+  { id: "e_cat", word: "Cat", emoji: "🐱", ru: "кошка" },
+  { id: "e_dog", word: "Dog", emoji: "🐶", ru: "собака" },
+  { id: "e_fish", word: "Fish", emoji: "🐟", ru: "рыба" },
+  { id: "e_sun", word: "Sun", emoji: "☀️", ru: "солнце" },
+  { id: "e_red", word: "Red", emoji: "🔴", ru: "красный" },
+  { id: "e_blue", word: "Blue", emoji: "🔵", ru: "синий" },
+  { id: "e_yellow", word: "Yellow", emoji: "🟡", ru: "жёлтый" },
+  { id: "e_apple", word: "Apple", emoji: "🍎", ru: "яблоко" },
+  { id: "e_house", word: "House", emoji: "🏠", ru: "дом" },
+  { id: "e_water", word: "Water", emoji: "💧", ru: "вода" },
+  { id: "e_book", word: "Book", emoji: "📖", ru: "книга" },
+  { id: "e_ball", word: "Ball", emoji: "⚽", ru: "мяч" },
+  { id: "e_one", word: "One", emoji: "1️⃣", ru: "один" },
+  { id: "e_two", word: "Two", emoji: "2️⃣", ru: "два" },
+  { id: "e_three", word: "Three", emoji: "3️⃣", ru: "три" },
+  { id: "e_l2_star", word: "Star", emoji: "⭐", ru: "звезда", level: 2 },
+  { id: "e_l2_tree", word: "Tree", emoji: "🌳", ru: "дерево", level: 2 },
+  { id: "e_l2_flower", word: "Flower", emoji: "🌸", ru: "цветок", level: 2 },
+  { id: "e_l2_moon", word: "Moon", emoji: "🌙", ru: "луна", level: 2 },
+  { id: "e_l2_bird", word: "Bird", emoji: "🐦", ru: "птица", level: 2 },
+  { id: "e_l2_cloud", word: "Cloud", emoji: "☁️", ru: "облако", level: 2 },
+];
+
+const STORY1 = "Утром котёнок Мурзик проснулся и увидел на столе рыбку. Мурзик обрадовался и быстро съел её. Потом он вышел во двор поиграть с мячиком.";
+const STORY2 = "Девочка Айгуль посадила семечко в горшок. Каждый день она поливала его водой. Через неделю из земли показался маленький зелёный росток.";
+const STORY3 = "Мальчик Ерлан гулял в парке и увидел воздушный шарик, который улетал в небо. Ерлан быстро побежал и поймал верёвочку шарика.";
+const STORY4 = "Щенок Дружок нашёл на прогулке косточку. Он взял её в зубы и радостно побежал домой показать хозяину.";
+const STORY5 = "В воскресенье папа взял Данияра на рыбалку. Они сидели у озера два часа, и наконец Данияр поймал большую рыбу. Мальчик был очень горд и радостно показал рыбу папе.";
+
+const READING_BANK = [
+  { id: "r1", context: STORY1, prompt: "Кто главный герой рассказа?", options: ["Мурзик", "Собака", "Мышка"], correct: 0 },
+  { id: "r2", context: STORY1, prompt: "Что лежало на столе?", options: ["Молоко", "Рыбка", "Хлеб"], correct: 1 },
+  { id: "r3", context: STORY1, prompt: "Чем Мурзик играл во дворе?", options: ["Клубком", "Листиком", "Мячиком"], correct: 2 },
+  { id: "r4", context: STORY2, prompt: "Кто посадил семечко?", options: ["Айгуль", "Мурзик", "Мальчик"], correct: 0 },
+  { id: "r5", context: STORY2, prompt: "Чем поливала Айгуль семечко?", options: ["Молоком", "Водой", "Соком"], correct: 1 },
+  { id: "r6", context: STORY2, prompt: "Что показалось из земли?", options: ["Росток", "Камень", "Жук"], correct: 0 },
+  { id: "r7", context: STORY2, prompt: "Через сколько дней показался росток?", options: ["Один день", "Неделю", "Месяц"], correct: 1 },
+  { id: "r8", context: STORY3, prompt: "Куда улетал шарик?", options: ["В небо", "В реку", "В лес"], correct: 0 },
+  { id: "r9", context: STORY3, prompt: "Кто поймал шарик?", options: ["Ерлан", "Айгуль", "Мурзик"], correct: 0 },
+  { id: "r10", context: STORY3, prompt: "Что схватил Ерлан, чтобы поймать шарик?", options: ["Верёвочку", "Палку", "Шапку"], correct: 0 },
+  { id: "r11", context: STORY4, prompt: "Что нашёл Дружок?", options: ["Косточку", "Мяч", "Тапок"], correct: 0 },
+  { id: "r12", context: STORY4, prompt: "Куда побежал Дружок с находкой?", options: ["Домой", "В лес", "В магазин"], correct: 0 },
+  { id: "r_l2_1", context: STORY5, prompt: "Куда папа взял Данияра?", options: ["На рыбалку", "В парк", "В магазин"], correct: 0, level: 2 },
+  { id: "r_l2_2", context: STORY5, prompt: "Сколько часов они сидели у озера?", options: ["Один час", "Два часа", "Три часа"], correct: 1, level: 2 },
+  { id: "r_l2_3", context: STORY5, prompt: "Что поймал Данияр?", options: ["Большую рыбу", "Маленькую рыбку", "Ничего"], correct: 0, level: 2 },
+  { id: "r_l2_4", context: STORY5, prompt: "Что почувствовал Данияр?", options: ["Гордость", "Грусть", "Страх"], correct: 0, level: 2 },
+];
+
+const LOGIC_BANK = [
+  { id: "l1", prompt: "Продолжи ряд: 1, 2, 3, 4, __", options: ["5", "6", "7"], correct: 0 },
+  { id: "l2", prompt: "Какое слово лишнее: яблоко, банан, стол, груша?", options: ["яблоко", "стол", "груша"], correct: 1 },
+  { id: "l3", prompt: "Продолжи ряд: 🔺 🔵 🔺 🔵 🔺 __", options: ["🔵", "🔺", "⭐"], correct: 0 },
+  { id: "l4", prompt: "Если сегодня понедельник, какой день будет завтра?", options: ["Среда", "Вторник", "Воскресенье"], correct: 1 },
+  { id: "l5", prompt: "У зайца 3 морковки, у белки 5 орехов. У кого больше?", options: ["У зайца", "У белки", "Поровну"], correct: 1 },
+  { id: "l6", prompt: "Какая фигура лишняя по цвету: 🔴 🔵 🔴 🔴", options: ["🔴", "🔵", "Обе одинаковые"], correct: 1 },
+  { id: "l7", prompt: "Какое слово лишнее: стол, стул, шкаф, яблоко?", options: ["яблоко", "стол", "стул"], correct: 0 },
+  { id: "l8", prompt: "Продолжи ряд: А, Б, В, __", options: ["Г", "Д", "Е"], correct: 0 },
+  { id: "l9", prompt: "Что тяжелее?", options: ["Камень", "Перо", "Одинаково"], correct: 0 },
+  { id: "l10", prompt: "Сколько ног у двух котов?", options: ["2", "4", "8"], correct: 2 },
+  { id: "l11", prompt: "Продолжи ряд: 2, 4, 6, __", options: ["7", "8", "9"], correct: 1 },
+  { id: "l12", prompt: "Какая фигура лишняя: 🟦 🟦 🟥 🟦", options: ["🟦", "🟥", "Обе одинаковые"], correct: 1 },
+  { id: "l13", prompt: "Что бывает утром?", options: ["Восход", "Закат", "Полночь"], correct: 0 },
+  { id: "l_l2_1", prompt: "Продолжи ряд: 5, 10, 15, __", options: ["18", "20", "25"], correct: 1, level: 2 },
+  { id: "l_l2_2", prompt: "У Айгуль было 3 яблока, а стало вдвое больше. Сколько стало?", options: ["5", "6", "7"], correct: 1, level: 2 },
+  { id: "l_l2_3", prompt: "Какое слово лишнее: стол, диван, кресло, кошка?", options: ["кошка", "стол", "диван"], correct: 0, level: 2 },
+  { id: "l_l2_4", prompt: "Продолжи ряд: 100, 90, 80, __", options: ["75", "70", "60"], correct: 1, level: 2 },
+  { id: "l_l2_5", prompt: "Сколько будет, если из 10 убрать половину?", options: ["4", "5", "6"], correct: 1, level: 2 },
+  { id: "l_l2_6", prompt: "Что было раньше?", options: ["Вчера", "Сегодня", "Одновременно"], correct: 0, level: 2 },
+];
+
+const SUBJECTS = [
+  { id: "math", name: "Математика", icon: "⛏️", color: "#4DA6FF", tagline: "Числа и счёт", bank: MATH_BANK, size: 10 },
+  { id: "kazakh", name: "Қазақ тілі", icon: "🧱", color: "#FFC107", tagline: "Слова и картинки", words: KAZAKH_WORDS, langCode: "kk-KZ", size: 10 },
+  { id: "english", name: "English", icon: "📦", color: "#FF7043", tagline: "Слова и картинки", words: ENGLISH_WORDS, langCode: "en-US", size: 10 },
+  { id: "reading", name: "Чтение", icon: "📗", color: "#66BB6A", tagline: "История и смысл", bank: READING_BANK, size: 10 },
+  { id: "logic", name: "Логика", icon: "🟪", color: "#AB47BC", tagline: "Загадки и ряды", bank: LOGIC_BANK, size: 10 },
+];
+
+const CORRECT_PHRASES = ["Ура! Точно верно!", "Молодец, так держать!", "Кубо гордится тобой!", "Отлично! Ты умница!", "Блок засчитан! Красота!"];
+const WRONG_PHRASES = ["Почти! Давай ещё раз подумаем.", "Не страшно, у тебя получится!", "Подумай ещё немножко."];
+
+const CHORES = [
+  { id: "bed", label: "Убрать постель", icon: "🛏️", excludeDays: [] },
+  { id: "teeth_am", label: "Почистить зубы (утро)", icon: "🪥", excludeDays: [] },
+  { id: "teeth_pm", label: "Почистить зубы (вечер)", icon: "🪥", excludeDays: [] },
+  { id: "toys", label: "Убрать игрушки", icon: "🧸", excludeDays: [] },
+  { id: "lunch", label: "Заказать еду в школе", icon: "🍱", excludeDays: [0, 6] },
+  { id: "backpack", label: "Собрать рюкзак и вещи на завтра", icon: "🎒", excludeDays: [5, 6] },
+];
+
+const FACTS = [
+  { id: "f1", cat: "football", emoji: "⚽", text: "В футбольной команде на поле играют 11 человек." },
+  { id: "f2", cat: "football", emoji: "🏆", text: "Первый чемпионат мира по футболу прошёл в 1930 году в Уругвае." },
+  { id: "f3", cat: "football", emoji: "⚡", text: "Иногда футболисты забивают гол уже в первые секунды матча!" },
+  { id: "f4", cat: "football", emoji: "🥅", text: "Футбольные ворота намного шире, чем рост взрослого человека." },
+  { id: "f5", cat: "football", emoji: "🇰🇿", text: "Сборная Казахстана по футболу тоже играет в международных турнирах." },
+  { id: "c1", cat: "countries", emoji: "🌍", text: "В мире около 195 разных стран." },
+  { id: "c2", cat: "countries", emoji: "🇰🇿", text: "Казахстан — самая большая в мире страна, у которой нет выхода к открытому океану." },
+  { id: "c3", cat: "countries", emoji: "🏝️", text: "В Японии больше 6800 островов!" },
+  { id: "c4", cat: "countries", emoji: "🦘", text: "Австралия — единственная страна, которая занимает целый материк." },
+  { id: "c5", cat: "countries", emoji: "💧", text: "Озеро Байкал в России — самое глубокое озеро на Земле." },
+  { id: "c6", cat: "countries", emoji: "🏜️", text: "В Египте стоят древние пирамиды, которым больше 4000 лет." },
+  { id: "h1", cat: "history", emoji: "🦖", text: "Динозавры жили на Земле миллионы лет назад, задолго до людей." },
+  { id: "h2", cat: "history", emoji: "🎨", text: "Древние люди рисовали на стенах пещер — это самые старые рисунки в мире." },
+  { id: "h3", cat: "history", emoji: "🛞", text: "Колесо придумали больше 5000 лет назад." },
+  { id: "h4", cat: "history", emoji: "🧱", text: "Великая Китайская стена — одно из самых длинных сооружений в мире." },
+  { id: "h5", cat: "history", emoji: "🚀", text: "Юрий Гагарин первым в мире полетел в космос в 1961 году." },
+  { id: "h6", cat: "history", emoji: "🇰🇿", text: "Космодром Байконур, откуда летают в космос, находится в Казахстане!" },
+];
+
+const WEEKLY_CAP = 5000;
+const PER_ANSWER_REWARD = 10;
+const PERFECT_BONUS = 25;
+const ALL_SUBJECTS_BONUS = 60;
+const HOMEWORK_REWARD = 125;
+const CHORE_REWARD = 25;
+
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function buildLangQuestions(words) {
+  return words.map((w) => {
+    const others = words.filter((x) => x.id !== w.id);
+    const distractors = pick(others, 2);
+    const optionWords = pick([w, ...distractors], 3);
+    const correct = optionWords.findIndex((o) => o.id === w.id);
+    return { id: w.id, word: w.word, emoji: w.emoji, correct, options: optionWords, isLang: true };
+  });
+}
+
+function speak(text, lang) {
+  try {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+const BOX_INTERVALS = { 1: 0, 2: 2, 3: 4, 4: 7, 5: 14 };
+
+function daysBetween(a, b) {
+  if (!a) return Infinity;
+  const da = new Date(a + "T00:00:00");
+  const db = new Date(b + "T00:00:00");
+  return Math.round((db - da) / 86400000);
+}
+
+function poolForLevel(items, level) {
+  return items.filter((it) => (it.level || 1) <= level);
+}
+
+function selectSmart(pool, qstatsForSubject, size) {
+  const today = todayStr();
+  const scored = pool.map((item) => {
+    const st = qstatsForSubject ? qstatsForSubject[item.id] : null;
+    if (!st || !st.lastShown) return { item, priority: 8, daysSince: Infinity };
+    const daysSince = daysBetween(st.lastShown, today);
+    const interval = BOX_INTERVALS[st.box] || 0;
+    const due = daysSince >= interval;
+    return { item, priority: due ? 10 - st.box : -1, daysSince };
+  });
+  scored.sort((a, b) => b.priority - a.priority || b.daysSince - a.daysSince);
+  return scored.slice(0, size).map((x) => x.item);
+}
+
+function checkLevelUp(next, subject) {
+  const lvl = next.levels[subject.id] || 1;
+  if (lvl >= 2) return false;
+  const hist = (next.history[subject.id] || []).slice(-3);
+  if (hist.length === 3 && hist.every((h) => h.total > 0 && h.correct / h.total >= 0.8)) {
+    next.levels[subject.id] = 2;
+    return true;
+  }
+  return false;
+}
+
+
+function pick(arr, n) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, Math.min(n, copy.length));
+}
+
+function randomPhrase(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+function mondayStr() {
+  const d = new Date();
+  const day = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - day);
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+function last14Dates() {
+  const arr = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    arr.push(d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"));
+  }
+  return arr;
+}
+
+function freshDaily() {
+  const d = { date: todayStr() };
+  SUBJECTS.forEach((s) => { d[s.id] = { done: false, correct: 0, total: 0 }; });
+  return d;
+}
+
+function freshDailyTasks() {
+  return {
+    date: todayStr(),
+    homework: { claim: null, approved: false, rejected: false, rewarded: false },
+    chores: {},
+    allBonusGiven: false,
+  };
+}
+
+function pickDailyFactIds() {
+  const cats = ["football", "countries", "history"];
+  let selected = [];
+  cats.forEach((cat) => {
+    const catFacts = FACTS.filter((f) => f.cat === cat);
+    selected = selected.concat(pick(catFacts, 2));
+  });
+  return { date: todayStr(), ids: selected.map((f) => f.id) };
+}
+
+function defaultStats() {
+  const s = {
+    totalStars: 0,
+    lastPlayed: null,
+    daily: freshDaily(),
+    dailyTasks: freshDailyTasks(),
+    money: { totalTenge: 0, weekStart: mondayStr(), weekEarned: 0 },
+    history: {},
+    qstats: {},
+    levels: {},
+    parentPassword: null,
+    dailyFacts: pickDailyFactIds(),
+  };
+  SUBJECTS.forEach((subj) => { s[subj.id] = { correct: 0, total: 0, sessions: 0 }; s.history[subj.id] = []; s.qstats[subj.id] = {}; s.levels[subj.id] = 1; });
+  return s;
+}
+
+function ensureStatsShape(raw) {
+  const base = defaultStats();
+  const merged = { ...base, ...raw };
+  merged.qstats = merged.qstats || {};
+  merged.levels = merged.levels || {};
+  SUBJECTS.forEach((subj) => {
+    merged[subj.id] = { ...base[subj.id], ...(raw[subj.id] || {}) };
+    merged.history = merged.history || {};
+    merged.history[subj.id] = (raw.history && raw.history[subj.id]) || [];
+    merged.qstats[subj.id] = (raw.qstats && raw.qstats[subj.id]) || {};
+    merged.levels[subj.id] = (raw.levels && raw.levels[subj.id]) || 1;
+  });
+  merged.money = { ...base.money, ...(raw.money || {}) };
+  merged.parentPassword = raw.parentPassword || null;
+  merged.daily = { ...base.daily, ...(raw.daily || {}) };
+  SUBJECTS.forEach((subj) => { merged.daily[subj.id] = merged.daily[subj.id] || { done: false, correct: 0, total: 0 }; });
+
+  merged.dailyTasks = { ...base.dailyTasks, ...(raw.dailyTasks || {}) };
+  merged.dailyTasks.homework = { ...base.dailyTasks.homework, ...((raw.dailyTasks && raw.dailyTasks.homework) || {}) };
+  merged.dailyTasks.chores = { ...((raw.dailyTasks && raw.dailyTasks.chores) || {}) };
+
+  merged.dailyFacts = raw.dailyFacts && raw.dailyFacts.ids ? raw.dailyFacts : base.dailyFacts;
+
+  if (merged.daily.date !== todayStr()) merged.daily = freshDaily();
+  if (merged.dailyTasks.date !== todayStr()) merged.dailyTasks = freshDailyTasks();
+  if (merged.dailyFacts.date !== todayStr()) merged.dailyFacts = pickDailyFactIds();
+  if (merged.money.weekStart !== mondayStr()) merged.money = { ...merged.money, weekStart: mondayStr(), weekEarned: 0 };
+
+  return merged;
+}
+
+function awardMoney(next, amount) {
+  const room = Math.max(0, WEEKLY_CAP - next.money.weekEarned);
+  const add = Math.min(amount, room);
+  next.money.weekEarned += add;
+  next.money.totalTenge += add;
+  return add;
+}
+
+const STORAGE_PROFILE = "barys-profile";
+const STORAGE_STATS = "barys-stats";
+const STORAGE_SESSION = "barys-session";
+
+function clearSession() {
+  try { localStorage.removeItem(STORAGE_SESSION); } catch (e) {}
+}
+
+function loadLocal(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function saveLocal(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/* ---------------------------------------------------------
+   Кубо — свой пиксельный герой (без брендов)
+--------------------------------------------------------- */
+
+function PixelHero({ color = "#4DA6FF", mood = "happy", size = 88 }) {
+  const grids = {
+    happy: [
+      [0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,2,1,1,2,1,1],[1,1,1,1,1,1,1,1],
+      [1,3,1,1,1,1,3,1],[1,1,3,3,3,3,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0],
+    ],
+    think: [
+      [0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,2,1,1,1,1,1],[1,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,1,1],[1,1,1,3,3,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0],
+    ],
+    neutral: [
+      [0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,2,1,1,2,1,1],[1,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,1,1],[1,1,1,3,3,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0],
+    ],
+  };
+  const grid = grids[mood] || grids.happy;
+  const cell = size / 8;
+  const colorFor = (v) => (v === 1 ? color : v === 2 ? "#1b1b1b" : v === 3 ? "#FFFFFF" : "transparent");
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(8, " + cell + "px)", width: size, height: size, imageRendering: "pixelated" }}>
+      {grid.flatMap((row, r) => row.map((v, c) => (
+        <div key={r + "-" + c} style={{ width: cell, height: cell, background: colorFor(v) }} />
+      )))}
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------
+   Приложение
+--------------------------------------------------------- */
+
+function App() {
+  const [profile, setProfile] = useState(() => loadLocal(STORAGE_PROFILE, null));
+  const [stats, setStats] = useState(() => ensureStatsShape(loadLocal(STORAGE_STATS, defaultStats())));
+
+  const [screen, setScreen] = useState(() => {
+    if (!loadLocal(STORAGE_PROFILE, null)) return "setup";
+    const s = loadLocal(STORAGE_SESSION, null);
+    if (s && s.date === todayStr()) {
+      const st = ensureStatsShape(loadLocal(STORAGE_STATS, defaultStats()));
+      const doneAlready = st.daily[s.subjectId] && st.daily[s.subjectId].done;
+      if (!doneAlready && s.subjectId && s.questions && s.questions.length) return "quiz";
+    }
+    return "home";
+  });
+  const [nameInput, setNameInput] = useState("");
+
+  const [subject, setSubject] = useState(() => {
+    const s = loadLocal(STORAGE_SESSION, null);
+    if (s && s.date === todayStr()) return SUBJECTS.find((x) => x.id === s.subjectId) || null;
+    return null;
+  });
+  const [questions, setQuestions] = useState(() => {
+    const s = loadLocal(STORAGE_SESSION, null);
+    return (s && s.date === todayStr() && s.questions) ? s.questions : [];
+  });
+  const [qIndex, setQIndex] = useState(() => {
+    const s = loadLocal(STORAGE_SESSION, null);
+    return (s && s.date === todayStr()) ? (s.qIndex || 0) : 0;
+  });
+  const [selected, setSelected] = useState(null);
+  const [sessionCorrect, setSessionCorrect] = useState(() => {
+    const s = loadLocal(STORAGE_SESSION, null);
+    return (s && s.date === todayStr()) ? (s.correctSoFar || 0) : 0;
+  });
+  const [earnedBreakdown, setEarnedBreakdown] = useState({ answers: 0, perfect: 0, allBonus: 0 });
+  const [alreadyDoneToday, setAlreadyDoneToday] = useState(false);
+  const [justLeveledUp, setJustLeveledUp] = useState(false);
+  const [langWords, setLangWords] = useState([]);
+  const [learnIndex, setLearnIndex] = useState(0);
+
+  const [gateInput, setGateInput] = useState("");
+  const [gateConfirm, setGateConfirm] = useState("");
+  const [gateError, setGateError] = useState("");
+
+  const [storageWarning, setStorageWarning] = useState(false);
+
+  useEffect(() => {
+    const s = loadLocal(STORAGE_SESSION, null);
+    if (s && s.date !== todayStr()) clearSession();
+  }, []);
+
+  useEffect(() => {
+    if (screen === "quiz" && subject && questions.length) {
+      saveLocal(STORAGE_SESSION, { date: todayStr(), subjectId: subject.id, questions, qIndex, correctSoFar: sessionCorrect });
+    }
+  }, [screen, subject, questions, qIndex, sessionCorrect]);
+
+  const activeChores = useMemo(() => {
+    const dow = new Date().getDay();
+    return CHORES.filter((c) => !c.excludeDays.includes(dow));
+  }, []);
+
+  const saveProfile = useCallback((name) => {
+    const p = { name };
+    setProfile(p);
+    if (!saveLocal(STORAGE_PROFILE, p)) setStorageWarning(true);
+    setScreen("home");
+  }, []);
+
+  const saveStats = useCallback((next) => {
+    setStats(next);
+    if (!saveLocal(STORAGE_STATS, next)) setStorageWarning(true);
+  }, []);
+
+  const startSession = (subj) => {
+    const level = stats.levels[subj.id] || 1;
+    const pool = poolForLevel(subj.bank, level);
+    const qs = selectSmart(pool, stats.qstats[subj.id], subj.size);
+    setSubject(subj);
+    setQuestions(qs);
+    setQIndex(0);
+    setSelected(null);
+    setSessionCorrect(0);
+    setScreen("quiz");
+  };
+
+  const openSubject = (subj) => {
+    const isDoneToday = stats.daily[subj.id] && stats.daily[subj.id].done;
+    if (isDoneToday) return;
+    const inProgressHere = subject && subject.id === subj.id && questions.length && qIndex < questions.length;
+    if (inProgressHere) {
+      setSelected(null);
+      setScreen("quiz");
+      return;
+    }
+    if (subj.words) {
+      const level = stats.levels[subj.id] || 1;
+      const pool = poolForLevel(subj.words, level);
+      const chosenWords = selectSmart(pool, stats.qstats[subj.id], subj.size);
+      setSubject(subj);
+      setLangWords(chosenWords);
+      setLearnIndex(0);
+      setScreen("learn");
+    } else {
+      startSession(subj);
+    }
+  };
+
+  const finishLearning = () => {
+    const qs = buildLangQuestions(langWords);
+    setQuestions(qs);
+    setQIndex(0);
+    setSelected(null);
+    setSessionCorrect(0);
+    setScreen("quiz");
+  };
+
+  const currentQuestion = questions[qIndex];
+
+  const handleAnswer = (idx) => {
+    if (selected !== null) return;
+    setSelected(idx);
+    const isCorrect = idx === currentQuestion.correct;
+    if (isCorrect) setSessionCorrect((c) => c + 1);
+
+    const next = clone(stats);
+    const subjId = subject.id;
+    const qId = currentQuestion.id;
+    const prev = (next.qstats[subjId] && next.qstats[subjId][qId]) || { box: 1, lastShown: null, correct: 0, wrong: 0 };
+    const updated = {
+      box: isCorrect ? Math.min(5, prev.box + 1) : 1,
+      lastShown: todayStr(),
+      correct: prev.correct + (isCorrect ? 1 : 0),
+      wrong: prev.wrong + (isCorrect ? 0 : 1),
+    };
+    next.qstats[subjId] = { ...(next.qstats[subjId] || {}), [qId]: updated };
+    saveStats(next);
+  };
+
+  const nextQuestion = () => {
+    if (qIndex + 1 < questions.length) {
+      setQIndex((i) => i + 1);
+      setSelected(null);
+    } else {
+      finishSession();
+    }
+  };
+
+  const finishSession = () => {
+    const next = clone(stats);
+    const wasDoneAlready = !!(next.daily[subject.id] && next.daily[subject.id].done);
+
+    const s = { ...next[subject.id] };
+    s.correct += sessionCorrect;
+    s.total += questions.length;
+    s.sessions += 1;
+    next[subject.id] = s;
+    next.totalStars = (next.totalStars || 0) + sessionCorrect;
+    next.lastPlayed = new Date().toISOString();
+    next.daily[subject.id] = { done: true, correct: sessionCorrect, total: questions.length };
+
+    const hist = next.history[subject.id] ? [...next.history[subject.id]] : [];
+    const entry = { date: todayStr(), correct: sessionCorrect, total: questions.length };
+    const idx = hist.findIndex((h) => h.date === entry.date);
+    if (idx >= 0) hist[idx] = entry; else hist.push(entry);
+    next.history[subject.id] = hist.slice(-30);
+
+    let answersEarned = 0;
+    let perfectEarned = 0;
+    let allBonusEarned = 0;
+
+    if (!wasDoneAlready) {
+      const baseReward = sessionCorrect * PER_ANSWER_REWARD;
+      answersEarned = awardMoney(next, baseReward);
+      if (sessionCorrect === questions.length) perfectEarned = awardMoney(next, PERFECT_BONUS);
+    }
+
+    const allDone = SUBJECTS.every((s) => next.daily[s.id] && next.daily[s.id].done);
+    if (allDone && !next.dailyTasks.allBonusGiven) {
+      allBonusEarned = awardMoney(next, ALL_SUBJECTS_BONUS);
+      next.dailyTasks.allBonusGiven = true;
+    }
+
+    const leveledUp = checkLevelUp(next, subject);
+
+    setEarnedBreakdown({ answers: answersEarned, perfect: perfectEarned, allBonus: allBonusEarned });
+    setAlreadyDoneToday(wasDoneAlready);
+    setJustLeveledUp(leveledUp);
+    saveStats(next);
+    clearSession();
+    setScreen("summary");
+  };
+
+  const backHome = () => setScreen("home");
+
+  const claimHomework = (claim) => {
+    const next = clone(stats);
+    next.dailyTasks.homework = { claim, approved: false, rejected: false, rewarded: false };
+    saveStats(next);
+  };
+
+  const claimChore = (choreId) => {
+    const next = clone(stats);
+    const cur = next.dailyTasks.chores[choreId] || {};
+    if (cur.claimed || cur.approved) return;
+    next.dailyTasks.chores[choreId] = { claimed: true, approved: false, rejected: false, rewarded: false };
+    saveStats(next);
+  };
+
+  const approveHomework = () => {
+    const next = clone(stats);
+    const hw = next.dailyTasks.homework;
+    if (hw.claim && !hw.rewarded) {
+      if (hw.claim === "done") awardMoney(next, HOMEWORK_REWARD);
+      hw.rewarded = true;
+    }
+    hw.approved = true;
+    hw.rejected = false;
+    saveStats(next);
+  };
+
+  const rejectHomework = () => {
+    const next = clone(stats);
+    next.dailyTasks.homework = { claim: null, approved: false, rejected: true, rewarded: false };
+    saveStats(next);
+  };
+
+  const approveChore = (id) => {
+    const next = clone(stats);
+    const c = next.dailyTasks.chores[id] || {};
+    if (c.claimed && !c.rewarded) {
+      awardMoney(next, CHORE_REWARD);
+      c.rewarded = true;
+    }
+    c.approved = true;
+    c.rejected = false;
+    next.dailyTasks.chores[id] = c;
+    saveStats(next);
+  };
+
+  const rejectChore = (id) => {
+    const next = clone(stats);
+    next.dailyTasks.chores[id] = { claimed: false, approved: false, rejected: true, rewarded: false };
+    saveStats(next);
+  };
+
+  const openParentGate = () => {
+    setGateInput("");
+    setGateConfirm("");
+    setGateError("");
+    setScreen(stats.parentPassword ? "parentGate" : "parentSetPassword");
+  };
+
+  const checkGate = () => {
+    if (gateInput === stats.parentPassword) setScreen("parentDashboard");
+    else setGateError("Неверный пароль. Попробуйте ещё раз.");
+  };
+
+  const createPassword = () => {
+    if (gateInput.length < 4) { setGateError("Пароль должен быть не короче 4 символов."); return; }
+    if (gateInput !== gateConfirm) { setGateError("Пароли не совпадают."); return; }
+    const next = clone(stats);
+    next.parentPassword = gateInput;
+    saveStats(next);
+    setGateInput("");
+    setGateConfirm("");
+    setGateError("");
+    setScreen("parentDashboard");
+  };
+
+  const changePassword = (newPass) => {
+    const next = clone(stats);
+    next.parentPassword = newPass;
+    saveStats(next);
+  };
+
+  const payout = () => {
+    const next = clone(stats);
+    next.money.totalTenge = 0;
+    saveStats(next);
+  };
+
+  const totalStars = stats.totalStars || 0;
+  const blocksFilled = Math.min(5, Math.floor(totalStars / 5));
+
+  const chartData = useMemo(
+    () => SUBJECTS.map((s) => {
+      const st = stats[s.id] || { correct: 0, total: 0 };
+      return { name: s.name, accuracy: st.total > 0 ? Math.round((st.correct / st.total) * 100) : 0, color: s.color };
+    }),
+    [stats]
+  );
+
+  return (
+    <Shell>
+      {storageWarning && <div className="banner-warning">Не удалось сохранить прогресс в этом браузере.</div>}
+
+      {screen === "setup" && <SetupScreen nameInput={nameInput} setNameInput={setNameInput} onStart={saveProfile} />}
+
+      {screen === "home" && (
+        <HomeScreen
+          profile={profile}
+          blocksFilled={blocksFilled}
+          totalStars={totalStars}
+          stats={stats}
+          activeChores={activeChores}
+          inProgressSubjectId={subject && qIndex < questions.length ? subject.id : null}
+          inProgressIndex={qIndex}
+          onPick={openSubject}
+          onParent={openParentGate}
+          onReward={() => setScreen("reward")}
+          onFacts={() => setScreen("facts")}
+          onClaimHomework={claimHomework}
+          onClaimChore={claimChore}
+        />
+      )}
+
+      {screen === "learn" && subject && langWords.length > 0 && (
+        <LearnScreen subject={subject} words={langWords} index={learnIndex} onNext={() => {
+          if (learnIndex + 1 < langWords.length) setLearnIndex((i) => i + 1);
+          else finishLearning();
+        }} onHome={backHome} />
+      )}
+
+      {screen === "quiz" && subject && currentQuestion && (
+        <QuizScreen subject={subject} question={currentQuestion} index={qIndex} total={questions.length} selected={selected} onAnswer={handleAnswer} onNext={nextQuestion} onHome={backHome} />
+      )}
+
+      {screen === "summary" && subject && (
+        <SummaryScreen subject={subject} correct={sessionCorrect} total={questions.length} breakdown={earnedBreakdown} alreadyDoneToday={alreadyDoneToday} justLeveledUp={justLeveledUp} onHome={backHome} />
+      )}
+
+      {screen === "reward" && <RewardScreen stats={stats} onHome={backHome} />}
+
+      {screen === "facts" && <FactsScreen facts={FACTS.filter((f) => stats.dailyFacts.ids.includes(f.id))} onHome={backHome} />}
+
+      {screen === "parentSetPassword" && (
+        <ParentSetPassword value={gateInput} setValue={setGateInput} confirm={gateConfirm} setConfirm={setGateConfirm} error={gateError} onSubmit={createPassword} onCancel={backHome} />
+      )}
+
+      {screen === "parentGate" && (
+        <ParentGate value={gateInput} setValue={setGateInput} error={gateError} onSubmit={checkGate} onCancel={backHome} />
+      )}
+
+      {screen === "parentDashboard" && (
+        <ParentDashboard
+          profile={profile}
+          stats={stats}
+          totalStars={totalStars}
+          chartData={chartData}
+          activeChores={activeChores}
+          onHome={backHome}
+          onPayout={payout}
+          onApproveHomework={approveHomework}
+          onRejectHomework={rejectHomework}
+          onApproveChore={approveChore}
+          onRejectChore={rejectChore}
+          onChangePassword={changePassword}
+        />
+      )}
+    </Shell>
+  );
+}
+
+function Shell({ children }) {
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-blocks" style={{ background: "linear-gradient(180deg, #BEEBFF 0%, #9FDDF7 100%)", fontFamily: "'Manrope', sans-serif" }}>
+      <div className="w-full max-w-md relative">{children}</div>
+    </div>
+  );
+}
+
+function SetupScreen({ nameInput, setNameInput, onStart }) {
+  return (
+    <div className="pop-in pixel-card p-8 flex flex-col items-center gap-5 text-center">
+      <div className="bob"><PixelHero color="#4DA6FF" mood="happy" size={96} /></div>
+      <h1 className="font-display text-2xl" style={{ color: "#1b1b1b" }}>Привет! Я Кубо</h1>
+      <p className="font-body text-sm" style={{ color: "#4a4a4a" }}>
+        Каждый день — 10 заданий в 5 предметах, домашка и дела по дому. По каждому предмету только одна попытка в день, так что старайся с первого раза! Как тебя зовут?
+      </p>
+      <input value={nameInput} onChange={(e) => setNameInput(e.target.value)} placeholder="Введи имя" className="w-full rounded-lg border-2 px-4 py-3 text-center font-body text-lg focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+      <button onClick={() => nameInput.trim() && onStart(nameInput.trim())} disabled={!nameInput.trim()} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#4DA6FF" }}>
+        Начать приключение →
+      </button>
+    </div>
+  );
+}
+
+function HomeScreen({ profile, blocksFilled, totalStars, stats, activeChores, inProgressSubjectId, inProgressIndex, onPick, onParent, onReward, onFacts, onClaimHomework, onClaimChore }) {
+  const hw = stats.dailyTasks.homework;
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="pop-in pixel-card p-5 flex items-center gap-4" style={{ background: "#4DA6FF" }}>
+        <PixelHero color="#FFFFFF" mood="happy" size={56} />
+        <div className="text-white font-body">
+          <p className="font-display text-lg leading-tight">Привет, {profile && profile.name}!</p>
+          <p className="text-sm opacity-90">Готов к сегодняшним делам?</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        {SUBJECTS.map((s) => {
+          const d = stats.daily[s.id] || { done: false, correct: 0, total: 0 };
+          const inProgress = !d.done && inProgressSubjectId === s.id && inProgressIndex > 0;
+          let statusLabel, statusColor;
+          if (d.done) { statusLabel = "Пройдено сегодня ✅"; statusColor = "#2e7d32"; }
+          else if (inProgress) { statusLabel = "▶️ Продолжить: вопрос " + (inProgressIndex + 1) + "/10"; statusColor = "#7a5a00"; }
+          else { statusLabel = "Одна попытка сегодня"; statusColor = "#8a8a8a"; }
+          return (
+            <button
+              key={s.id}
+              onClick={() => onPick(s)}
+              disabled={d.done}
+              className="pixel-btn p-4 flex flex-col items-start gap-2 text-left relative"
+              style={{ borderColor: "#1b1b1b", background: d.done ? "#F3F3F3" : inProgress ? "#FFF6D9" : "white" }}
+            >
+              {d.done && <span className="absolute -top-2 -right-2 text-lg">✅</span>}
+              <div className="rounded-md p-2 text-xl" style={{ background: s.color + "33", border: "2px solid " + s.color }}>{s.icon}</div>
+              <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>{s.name}</span>
+              <span className="font-body text-xs" style={{ color: "#5a5a5a" }}>{s.tagline}</span>
+              <span className="font-body text-[10px] mt-0.5" style={{ color: statusColor }}>{statusLabel}</span>
+            </button>
+          );
+        })}
+        <div className="pixel-btn p-4 flex flex-col items-center justify-center gap-1" style={{ background: "#FFF6D9" }}>
+          <span className="font-display text-xs text-center" style={{ color: "#7a5a00" }}>Твоя башня</span>
+          <div className="flex gap-1">{Array.from({ length: 5 }).map((_, i) => (<span key={i} style={{ fontSize: 16 }}>{i < blocksFilled ? "🧱" : "⬜"}</span>))}</div>
+          <span className="font-body text-[11px]" style={{ color: "#7a5a00" }}>{totalStars} звёзд</span>
+        </div>
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        <div className="flex items-center gap-2"><span className="text-xl">📚</span><span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Домашнее задание</span></div>
+        {(!hw.claim || hw.rejected) ? (
+          <div className="grid grid-cols-2 gap-2">
+            <button onClick={() => onClaimHomework("done")} className="pixel-btn py-2 font-body text-sm bg-white">Сделано</button>
+            <button onClick={() => onClaimHomework("none")} className="pixel-btn py-2 font-body text-sm bg-white">Не задали</button>
+          </div>
+        ) : (
+          <p className="font-body text-xs" style={{ color: hw.approved ? "#2e7d32" : "#8a5a00" }}>
+            {hw.approved ? (hw.claim === "done" ? "Подтверждено родителем ✅" : "Подтверждено: не задавали ✅") : "Ждём подтверждения родителя…"}
+          </p>
+        )}
+        {hw.rejected && <p className="font-body text-[10px]" style={{ color: "#c0392b" }}>Родитель попросил уточнить — отметь заново, когда сделаешь.</p>}
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        <div className="flex items-center gap-2"><span className="text-xl">🧹</span><span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Дела по дому и гигиена</span></div>
+        <div className="flex flex-col gap-1.5">
+          {activeChores.map((c) => {
+            const st = stats.dailyTasks.chores[c.id] || {};
+            let text, bg, disabled = false;
+            if (st.approved) { text = "Готово"; bg = "#DFF5E1"; disabled = true; }
+            else if (st.claimed) { text = "Ждём подтверждения"; bg = "#FFF6D9"; disabled = true; }
+            else { text = "Отметить"; bg = "white"; }
+            return (
+              <button key={c.id} disabled={disabled} onClick={() => onClaimChore(c.id)} className="pixel-btn flex items-center justify-between px-3 py-2 font-body text-xs" style={{ background: bg }}>
+                <span>{c.icon} {c.label}</span>
+                <span style={{ color: st.approved ? "#2e7d32" : st.claimed ? "#8a5a00" : "#5a5a5a" }}>{st.approved ? "✅" : text}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <button onClick={onFacts} className="pixel-btn p-4 flex items-center gap-3 text-left" style={{ background: "#E3F2FD" }}>
+        <span className="text-2xl">🧠</span>
+        <div>
+          <p className="font-display text-sm" style={{ color: "#1b1b1b" }}>Любопытный факт</p>
+          <p className="font-body text-[10px]" style={{ color: "#5a5a5a" }}>Необязательно — просто для интереса! Футбол, страны, история</p>
+        </div>
+      </button>
+
+      <div className="flex gap-2 justify-center">
+        <button onClick={onReward} className="pixel-btn flex items-center gap-1.5 text-xs font-body px-3 py-2 bg-white" style={{ color: "#4a4a4a" }}>🏆 Копилка</button>
+        <button onClick={onParent} className="pixel-btn flex items-center gap-1.5 text-xs font-body px-3 py-2 bg-white" style={{ color: "#4a4a4a" }}>🔒 Кабинет родителя</button>
+      </div>
+    </div>
+  );
+}
+
+function QuizScreen({ subject, question, index, total, selected, onAnswer, onNext, onHome }) {
+  const isCorrect = selected !== null && selected === question.correct;
+
+  if (question.isLang) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+          <div className="flex items-center gap-1.5 font-body text-xs pixel-btn bg-white px-3 py-1.5" style={{ color: "#4a4a4a" }}><span>{subject.icon}</span> {subject.name}</div>
+          <span className="font-body text-xs pixel-btn bg-white px-3 py-1.5" style={{ color: "#4a4a4a" }}>{index + 1} / {total}</span>
+        </div>
+
+        <div className="w-full h-3 rounded-md bg-white overflow-hidden border-2" style={{ borderColor: "#1b1b1b" }}>
+          <div className="h-full transition-all" style={{ width: (index / total) * 100 + "%", background: subject.color }} />
+        </div>
+
+        <div key={question.id} className="pop-in pixel-card p-6 flex flex-col items-center gap-4">
+          <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>Где это слово?</p>
+          <div className="flex items-center gap-3">
+            <p className="font-display text-3xl" style={{ color: "#1b1b1b" }}>{question.word}</p>
+            <button onClick={() => speak(question.word, subject.langCode)} className="pixel-btn bg-white px-2 py-2 text-lg">🔊</button>
+          </div>
+          <div className="grid grid-cols-3 gap-2 w-full">
+            {question.options.map((opt, idx) => {
+              let style = { borderColor: "#1b1b1b", background: "white" };
+              if (selected !== null) {
+                if (idx === question.correct) style = { borderColor: "#1b1b1b", background: "#DFF5E1" };
+                else if (idx === selected) style = { borderColor: "#1b1b1b", background: "#FFE1DA" };
+              }
+              return (
+                <button key={idx} onClick={() => onAnswer(idx)} disabled={selected !== null} className="pixel-btn flex flex-col items-center gap-1 py-3 px-1" style={style}>
+                  <span className="text-3xl">{opt.emoji}</span>
+                  <span className="font-body text-[11px]" style={{ color: "#1b1b1b" }}>{opt.word}</span>
+                  {selected !== null && idx === question.correct && <span className="text-xs">✅</span>}
+                  {selected !== null && idx === selected && idx !== question.correct && <span className="text-xs">❌</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {selected !== null && (
+          <div className="pop-in pixel-card flex items-center gap-3 p-4" style={{ background: isCorrect ? "#DFF5E1" : "#FFF6D9" }}>
+            <div className={isCorrect ? "wiggle" : ""}><PixelHero color={isCorrect ? "#4DA6FF" : "#AB47BC"} mood={isCorrect ? "happy" : "think"} size={48} /></div>
+            <p className="font-body text-sm flex-1" style={{ color: "#1b1b1b" }}>{isCorrect ? randomPhrase(CORRECT_PHRASES) : randomPhrase(WRONG_PHRASES)}</p>
+            <button onClick={onNext} className="pixel-btn px-4 py-2 font-display text-sm text-white" style={{ background: subject.color }}>Далее →</button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+        <div className="flex items-center gap-1.5 font-body text-xs pixel-btn bg-white px-3 py-1.5" style={{ color: "#4a4a4a" }}><span>{subject.icon}</span> {subject.name}</div>
+        <span className="font-body text-xs pixel-btn bg-white px-3 py-1.5" style={{ color: "#4a4a4a" }}>{index + 1} / {total}</span>
+      </div>
+
+      <div className="w-full h-3 rounded-md bg-white overflow-hidden border-2" style={{ borderColor: "#1b1b1b" }}>
+        <div className="h-full transition-all" style={{ width: (index / total) * 100 + "%", background: subject.color }} />
+      </div>
+
+      {question.context && <div className="pop-in pixel-card p-4 font-body text-sm leading-relaxed" style={{ color: "#1b1b1b" }}>{question.context}</div>}
+
+      <div key={question.id} className="pop-in pixel-card p-6 flex flex-col gap-4">
+        <p className="font-display text-lg text-center" style={{ color: "#1b1b1b" }}>{question.prompt}</p>
+        <div className="flex flex-col gap-2">
+          {question.options.map((opt, idx) => {
+            let style = { borderColor: "#1b1b1b", background: "white", color: "#1b1b1b" };
+            if (selected !== null) {
+              if (idx === question.correct) style = { borderColor: "#1b1b1b", background: "#DFF5E1", color: "#1b1b1b" };
+              else if (idx === selected) style = { borderColor: "#1b1b1b", background: "#FFE1DA", color: "#1b1b1b" };
+            }
+            return (
+              <button key={idx} onClick={() => onAnswer(idx)} disabled={selected !== null} className="pixel-btn w-full text-left px-4 py-3 font-body flex items-center justify-between" style={style}>
+                {opt}
+                {selected !== null && idx === question.correct && <span>✅</span>}
+                {selected !== null && idx === selected && idx !== question.correct && <span>❌</span>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {selected !== null && (
+        <div className="pop-in pixel-card flex items-center gap-3 p-4" style={{ background: isCorrect ? "#DFF5E1" : "#FFF6D9" }}>
+          <div className={isCorrect ? "wiggle" : ""}><PixelHero color={isCorrect ? "#4DA6FF" : "#AB47BC"} mood={isCorrect ? "happy" : "think"} size={48} /></div>
+          <p className="font-body text-sm flex-1" style={{ color: "#1b1b1b" }}>{isCorrect ? randomPhrase(CORRECT_PHRASES) : randomPhrase(WRONG_PHRASES)}</p>
+          <button onClick={onNext} className="pixel-btn px-4 py-2 font-display text-sm text-white" style={{ background: subject.color }}>Далее →</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LearnScreen({ subject, words, index, onNext, onHome }) {
+  const w = words[index];
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+        <div className="flex items-center gap-1.5 font-body text-xs pixel-btn bg-white px-3 py-1.5" style={{ color: "#4a4a4a" }}><span>{subject.icon}</span> Учим слова</div>
+        <span className="font-body text-xs pixel-btn bg-white px-3 py-1.5" style={{ color: "#4a4a4a" }}>{index + 1} / {words.length}</span>
+      </div>
+
+      <div className="w-full h-3 rounded-md bg-white overflow-hidden border-2" style={{ borderColor: "#1b1b1b" }}>
+        <div className="h-full transition-all" style={{ width: (index / words.length) * 100 + "%", background: subject.color }} />
+      </div>
+
+      <div key={w.id} className="pop-in pixel-card p-8 flex flex-col items-center gap-3 text-center">
+        <span className="text-6xl">{w.emoji}</span>
+        <p className="font-display text-3xl" style={{ color: "#1b1b1b" }}>{w.word}</p>
+        <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>{w.ru}</p>
+        <button onClick={() => speak(w.word, subject.langCode)} className="pixel-btn bg-white px-3 py-2 text-lg">🔊 Слушать</button>
+      </div>
+
+      <button onClick={onNext} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: subject.color }}>
+        {index + 1 < words.length ? "Дальше →" : "Начать проверку →"}
+      </button>
+    </div>
+  );
+}
+
+function SummaryScreen({ subject, correct, total, breakdown, alreadyDoneToday, justLeveledUp, onHome }) {
+  const pct = Math.round((correct / total) * 100);
+  const cheer = pct >= 80 ? "Ты справился отлично!" : pct >= 50 ? "Хороший результат!" : "Ещё немного практики — и всё получится!";
+  const totalEarned = (breakdown.answers || 0) + (breakdown.perfect || 0) + (breakdown.allBonus || 0);
+  return (
+    <div className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center">
+      <PixelHero color={subject.color} mood={pct >= 50 ? "happy" : "neutral"} size={72} />
+      <h2 className="font-display text-xl" style={{ color: "#1b1b1b" }}>{cheer}</h2>
+      <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>{subject.name}: {correct} из {total} верно</p>
+      <div className="flex gap-1 text-2xl">{Array.from({ length: total }).map((_, i) => (<span key={i}>{i < correct ? "⭐" : "☆"}</span>))}</div>
+
+      {justLeveledUp && (
+        <div className="pixel-card p-3 w-full" style={{ background: "#E3F2FD" }}>
+          <p className="font-display text-sm" style={{ color: "#1b1b1b" }}>🎉 Новый уровень! Теперь по этому предмету будут задания посложнее.</p>
+        </div>
+      )}
+
+      {totalEarned > 0 && (
+        <div className="pixel-card p-3 flex flex-col gap-1 w-full" style={{ background: "#FFF6D9" }}>
+          {breakdown.answers > 0 && <p className="font-body text-xs" style={{ color: "#7a5a00" }}>+ {breakdown.answers} ₸ за {correct} правильных ответов</p>}
+          {breakdown.perfect > 0 && <p className="font-body text-xs" style={{ color: "#7a5a00" }}>+ {breakdown.perfect} ₸ бонус за 10 из 10!</p>}
+          {breakdown.allBonus > 0 && <p className="font-body text-xs" style={{ color: "#7a5a00" }}>+ {breakdown.allBonus} ₸ бонус — все предметы за сегодня пройдены!</p>}
+          <p className="font-display text-sm" style={{ color: "#7a5a00" }}>Итого: + {totalEarned} ₸ в копилку</p>
+        </div>
+      )}
+      {totalEarned === 0 && alreadyDoneToday && <p className="font-body text-xs" style={{ color: "#8a8a8a" }}>Сегодня это уже засчитано — потренироваться можно, но копилка не изменится.</p>}
+      {totalEarned === 0 && !alreadyDoneToday && correct === 0 && <p className="font-body text-xs" style={{ color: "#8a8a8a" }}>Каждый правильный ответ приносит монеты — попробуй ещё раз!</p>}
+
+      <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>Предмет доступен один раз в день — следующая попытка завтра.</p>
+
+      <div className="w-full mt-1">
+        <button onClick={onHome} className="pixel-btn w-full py-3 font-display text-sm text-white" style={{ background: subject.color }}>🏠 На главную</button>
+      </div>
+    </div>
+  );
+}
+
+function RewardScreen({ stats, onHome }) {
+  const money = stats.money;
+  const weekPct = Math.min(100, Math.round((money.weekEarned / WEEKLY_CAP) * 100));
+  return (
+    <div className="pop-in flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h2 className="font-display text-lg" style={{ color: "#1b1b1b" }}>Твоя копилка</h2>
+        <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+      </div>
+      <div className="pixel-card p-6 flex flex-col items-center gap-2 text-center" style={{ background: "#FFF6D9" }}>
+        <div className="text-4xl">📦</div>
+        <p className="font-display text-2xl" style={{ color: "#7a5a00" }}>{money.totalTenge} ₸</p>
+        <p className="font-body text-xs" style={{ color: "#7a5a00" }}>заработано и ждёт выдачи</p>
+      </div>
+      <div className="pixel-card p-4">
+        <p className="font-body text-xs mb-1" style={{ color: "#5a5a5a" }}>На этой неделе: {money.weekEarned} / {WEEKLY_CAP} ₸</p>
+        <div className="w-full h-3 rounded-md bg-gray-100 overflow-hidden border-2" style={{ borderColor: "#1b1b1b" }}>
+          <div className="h-full" style={{ width: weekPct + "%", background: "#FFC107" }} />
+        </div>
+      </div>
+      <div className="pixel-card p-4">
+        <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>Как заработать: {PER_ANSWER_REWARD} ₸ за каждый правильный ответ, +{PERFECT_BONUS} ₸ если все 10 из 10 верны, +{ALL_SUBJECTS_BONUS} ₸ если пройдены все 5 предметов за день. Домашка и дела по дому тоже приносят тенге. Максимум {WEEKLY_CAP} ₸ в неделю.</p>
+      </div>
+    </div>
+  );
+}
+
+function ParentGate({ value, setValue, error, onSubmit, onCancel }) {
+  return (
+    <div className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center">
+      <div className="text-3xl">🔒</div>
+      <h2 className="font-display text-lg" style={{ color: "#1b1b1b" }}>Кабинет родителя</h2>
+      <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>Введите пароль:</p>
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        type="password"
+        autoFocus
+        onKeyDown={(e) => e.key === "Enter" && onSubmit()}
+        className="w-full rounded-lg border-2 px-3 py-2 text-center font-body text-lg focus:outline-none"
+        style={{ borderColor: error ? "#c0392b" : "#1b1b1b" }}
+      />
+      {error && <p className="font-body text-xs" style={{ color: "#c0392b" }}>{error}</p>}
+      <div className="flex gap-2 w-full mt-1">
+        <button onClick={onCancel} className="pixel-btn flex-1 py-3 font-display text-sm bg-white" style={{ color: "#1b1b1b" }}>Назад</button>
+        <button onClick={onSubmit} className="pixel-btn flex-1 py-3 font-display text-sm text-white" style={{ background: "#4DA6FF" }}>Войти</button>
+      </div>
+    </div>
+  );
+}
+
+function ParentSetPassword({ value, setValue, confirm, setConfirm, error, onSubmit, onCancel }) {
+  return (
+    <div className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center">
+      <div className="text-3xl">🔒</div>
+      <h2 className="font-display text-lg" style={{ color: "#1b1b1b" }}>Придумайте пароль</h2>
+      <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>Он защитит родительский кабинет от ребёнка. Минимум 4 символа.</p>
+      <input value={value} onChange={(e) => setValue(e.target.value)} type="password" placeholder="Новый пароль" className="w-full rounded-lg border-2 px-3 py-2 text-center font-body text-lg focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+      <input value={confirm} onChange={(e) => setConfirm(e.target.value)} type="password" placeholder="Повторите пароль" className="w-full rounded-lg border-2 px-3 py-2 text-center font-body text-lg focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+      {error && <p className="font-body text-xs" style={{ color: "#c0392b" }}>{error}</p>}
+      <div className="flex gap-2 w-full mt-1">
+        <button onClick={onCancel} className="pixel-btn flex-1 py-3 font-display text-sm bg-white" style={{ color: "#1b1b1b" }}>Назад</button>
+        <button onClick={onSubmit} className="pixel-btn flex-1 py-3 font-display text-sm text-white" style={{ background: "#4DA6FF" }}>Сохранить</button>
+      </div>
+    </div>
+  );
+}
+
+function FactsScreen({ facts, onHome }) {
+  const [current, setCurrent] = useState(() => facts[Math.floor(Math.random() * facts.length)]);
+  const catLabel = { football: "⚽ Футбол", countries: "🌍 Страны", history: "🏛️ История" };
+  const nextFact = () => {
+    let f;
+    do { f = facts[Math.floor(Math.random() * facts.length)]; } while (f.id === current.id && facts.length > 1);
+    setCurrent(f);
+  };
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+        <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Любопытный факт</span>
+        <span style={{ width: 36 }} />
+      </div>
+
+      <p className="font-body text-[10px] text-center" style={{ color: "#8a8a8a" }}>Сегодня — 2 факта по каждой теме, завтра будут новые</p>
+
+      <div key={current.id} className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center" style={{ background: "#E3F2FD" }}>
+        <span className="text-6xl">{current.emoji}</span>
+        <span className="pixel-btn bg-white px-3 py-1 font-body text-[10px]" style={{ color: "#1b1b1b" }}>{catLabel[current.cat]}</span>
+        <p className="font-body text-base" style={{ color: "#1b1b1b" }}>{current.text}</p>
+        <button onClick={() => speak(current.text, "ru-RU")} className="pixel-btn bg-white px-3 py-2 text-lg">🔊 Слушать</button>
+      </div>
+
+      <button onClick={nextFact} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#4DA6FF" }}>Ещё факт →</button>
+    </div>
+  );
+}
+
+function DynamicsRow({ subject, history }) {
+  const dates = last14Dates();
+  const map = {};
+  (history || []).forEach((h) => { map[h.date] = h; });
+  return (
+    <div className="flex items-center gap-2">
+      <span className="w-[92px] shrink-0 font-body text-[10px] flex items-center gap-1" style={{ color: "#1b1b1b" }}><span>{subject.icon}</span>{subject.name}</span>
+      <div className="flex gap-0.5">
+        {dates.map((d) => {
+          const h = map[d];
+          const pct = h && h.total > 0 ? Math.round((h.correct / h.total) * 100) : null;
+          const bg = pct === null ? "#E5E5E5" : pct >= 80 ? "#4CAF50" : pct >= 50 ? "#FFC107" : "#FF7043";
+          return <div key={d} title={d + (pct !== null ? ": " + pct + "%" : ": нет данных")} style={{ width: 10, height: 10, background: bg, borderRadius: 2, border: "1px solid rgba(27,27,27,0.15)" }} />;
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ParentDashboard({ profile, stats, totalStars, chartData, activeChores, onHome, onPayout, onApproveHomework, onRejectHomework, onApproveChore, onRejectChore, onChangePassword }) {
+  const totalSessions = SUBJECTS.reduce((sum, s) => sum + ((stats[s.id] && stats[s.id].sessions) || 0), 0);
+  const lastPlayed = stats.lastPlayed ? new Date(stats.lastPlayed).toLocaleString("ru-RU") : "ещё не занимался(ась)";
+  const withData = chartData.filter((c) => c.accuracy > 0).sort((a, b) => a.accuracy - b.accuracy);
+  const weakest = withData[0];
+  const hw = stats.dailyTasks.homework;
+
+  const [newPass, setNewPass] = useState("");
+  const [newPassConfirm, setNewPassConfirm] = useState("");
+  const [passMsg, setPassMsg] = useState("");
+  const [showPassForm, setShowPassForm] = useState(false);
+
+  const handlePayout = () => {
+    if (window.confirm("Обнулить копилку после выдачи денег ребёнку?")) onPayout();
+  };
+
+  const handleChangePassword = () => {
+    if (newPass.length < 4) { setPassMsg("Пароль должен быть не короче 4 символов."); return; }
+    if (newPass !== newPassConfirm) { setPassMsg("Пароли не совпадают."); return; }
+    onChangePassword(newPass);
+    setNewPass("");
+    setNewPassConfirm("");
+    setPassMsg("Пароль обновлён ✅");
+    setShowPassForm(false);
+  };
+
+  return (
+    <div className="pop-in flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h2 className="font-display text-lg" style={{ color: "#1b1b1b" }}>Отчёт: {profile && profile.name}</h2>
+        <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2">
+        <StatCard label="Звёзд" value={totalStars} icon="⭐" />
+        <StatCard label="Сессий" value={totalSessions} icon="✨" />
+        <StatCard label="Копилка" value={stats.money.totalTenge + " ₸"} icon="📦" />
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-3">
+        <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>📋 Ждут подтверждения сегодня</p>
+
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-body text-xs" style={{ color: "#1b1b1b" }}>
+            📚 Домашка: {hw.claim ? (hw.claim === "done" ? "заявлено «сделано»" : "заявлено «не задали»") : "ещё не отмечено"}
+          </span>
+          {hw.claim && !hw.approved && (
+            <div className="flex gap-1">
+              <button onClick={onApproveHomework} className="pixel-btn px-2 py-1 text-xs bg-white">✅</button>
+              <button onClick={onRejectHomework} className="pixel-btn px-2 py-1 text-xs bg-white">❌</button>
+            </div>
+          )}
+          {hw.approved && <span className="font-body text-xs" style={{ color: "#2e7d32" }}>подтверждено</span>}
+        </div>
+
+        {activeChores.map((c) => {
+          const st = stats.dailyTasks.chores[c.id] || {};
+          return (
+            <div key={c.id} className="flex items-center justify-between gap-2">
+              <span className="font-body text-xs" style={{ color: "#1b1b1b" }}>{c.icon} {c.label}: {st.approved ? "подтверждено" : st.claimed ? "ждёт подтверждения" : "не отмечено"}</span>
+              {st.claimed && !st.approved && (
+                <div className="flex gap-1">
+                  <button onClick={() => onApproveChore(c.id)} className="pixel-btn px-2 py-1 text-xs bg-white">✅</button>
+                  <button onClick={() => onRejectChore(c.id)} className="pixel-btn px-2 py-1 text-xs bg-white">❌</button>
+                </div>
+              )}
+              {st.approved && <span className="font-body text-xs" style={{ color: "#2e7d32" }}>✅</span>}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="pixel-card p-4">
+        <p className="font-body text-xs mb-2" style={{ color: "#5a5a5a" }}>Общая точность по предметам (%)</p>
+        <div className="flex items-end justify-between gap-2 h-40">
+          {chartData.map((d) => (
+            <div key={d.name} className="flex flex-col items-center flex-1 gap-1 h-full justify-end">
+              <span className="font-body text-[10px]" style={{ color: "#5a5a5a" }}>{d.accuracy}%</span>
+              <div className="w-full transition-all" style={{ height: Math.max(d.accuracy, 4) + "%", background: d.color, border: "2px solid #1b1b1b", borderRadius: "4px 4px 0 0" }} />
+              <span className="font-body text-[9px] text-center leading-tight" style={{ color: "#5a5a5a" }}>{d.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>📈 Динамика за 14 дней</p>
+        <div className="flex flex-col gap-1.5">
+          {SUBJECTS.map((s) => (<DynamicsRow key={s.id} subject={s} history={stats.history[s.id]} />))}
+        </div>
+        <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>🟩 ≥80%&nbsp;&nbsp;🟨 50–79%&nbsp;&nbsp;🟧 &lt;50%&nbsp;&nbsp;⬜ не занимался</p>
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>Последнее занятие: {lastPlayed}</p>
+        {weakest && <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>💡 Стоит повторить: <strong>{weakest.name}</strong> ({weakest.accuracy}% правильных)</p>}
+        {!weakest && <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>Пока нет данных — начните первое занятие!</p>}
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>
+          Мотивация: {PER_ANSWER_REWARD} ₸ за каждый правильный ответ (без порога — 10/10 всегда выгоднее 7/10), +{PERFECT_BONUS} ₸ за идеальные 10 из 10, +{ALL_SUBJECTS_BONUS} ₸ за все 5 предметов в один день. Домашка — {HOMEWORK_REWARD} ₸, дело по дому — {CHORE_REWARD} ₸. Максимум {WEEKLY_CAP} ₸ в неделю. На этой неделе: {stats.money.weekEarned} / {WEEKLY_CAP} ₸.
+        </p>
+        <button onClick={handlePayout} className="pixel-btn py-2 font-display text-sm bg-white" style={{ color: "#c0392b" }}>Выплатить и обнулить копилку</button>
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-1">
+        {SUBJECTS.map((s) => {
+          const st = stats[s.id] || { correct: 0, total: 0, sessions: 0 };
+          const lvl = stats.levels[s.id] || 1;
+          return (
+            <div key={s.id} className="flex items-center justify-between font-body text-xs py-1" style={{ color: "#1b1b1b" }}>
+              <span className="flex items-center gap-1.5"><span>{s.icon}</span> {s.name} <span className="font-body text-[9px] px-1.5 py-0.5 rounded" style={{ background: lvl === 2 ? "#DFF5E1" : "#F0F0F0", color: lvl === 2 ? "#2e7d32" : "#8a8a8a" }}>уровень {lvl}</span></span>
+              <span style={{ color: "#5a5a5a" }}>{st.correct}/{st.total} · {st.sessions} занят.</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        {!showPassForm ? (
+          <button onClick={() => { setShowPassForm(true); setPassMsg(""); }} className="pixel-btn py-2 font-body text-xs bg-white" style={{ color: "#1b1b1b" }}>🔒 Сменить пароль</button>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <input value={newPass} onChange={(e) => setNewPass(e.target.value)} type="password" placeholder="Новый пароль" className="w-full rounded-lg border-2 px-3 py-2 font-body text-sm focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+            <input value={newPassConfirm} onChange={(e) => setNewPassConfirm(e.target.value)} type="password" placeholder="Повторите пароль" className="w-full rounded-lg border-2 px-3 py-2 font-body text-sm focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+            <div className="flex gap-2">
+              <button onClick={() => setShowPassForm(false)} className="pixel-btn flex-1 py-2 font-body text-xs bg-white" style={{ color: "#1b1b1b" }}>Отмена</button>
+              <button onClick={handleChangePassword} className="pixel-btn flex-1 py-2 font-body text-xs text-white" style={{ background: "#4DA6FF" }}>Сохранить</button>
+            </div>
+          </div>
+        )}
+        {passMsg && <p className="font-body text-xs" style={{ color: passMsg.includes("✅") ? "#2e7d32" : "#c0392b" }}>{passMsg}</p>}
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ label, value, icon }) {
+  return (
+    <div className="pixel-card p-3 flex flex-col items-center gap-1">
+      <span className="text-base">{icon}</span>
+      <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>{value}</span>
+      <span className="font-body text-[10px]" style={{ color: "#5a5a5a" }}>{label}</span>
+    </div>
+  );
+}
+
+try {
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(<App />);
+} catch (e) {
+  const box = document.getElementById("boot-error");
+  box.style.display = "block";
+  box.textContent = "Ошибка запуска: " + e.message;
+}
+</script>
+</body>
+</html>
