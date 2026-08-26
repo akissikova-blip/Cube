@@ -179,7 +179,7 @@ const LOGIC_BANK = [
 
 const SUBJECTS = [
   { id: "math", name: "Математика", icon: "⛏️", color: "#4DA6FF", tagline: "Числа и счёт", bank: MATH_BANK, size: 10 },
-  { id: "kazakh", name: "Қазақ тілі", icon: "🧱", color: "#FFC107", tagline: "Слова и картинки", words: KAZAKH_WORDS, langCode: "kk-KZ", size: 10 },
+  { id: "kazakh", name: "Қазақ тілі", icon: "🧱", color: "#FFC107", tagline: "Слова и картинки", words: KAZAKH_WORDS, langCode: "kk-KZ", noAudio: true, size: 10 },
   { id: "english", name: "English", icon: "📦", color: "#FF7043", tagline: "Слова и картинки", words: ENGLISH_WORDS, langCode: "en-US", size: 10 },
   { id: "reading", name: "Чтение", icon: "📗", color: "#66BB6A", tagline: "История и смысл", bank: READING_BANK, size: 10 },
   { id: "logic", name: "Логика", icon: "🟪", color: "#AB47BC", tagline: "Загадки и ряды", bank: LOGIC_BANK, size: 10 },
@@ -198,11 +198,14 @@ const CHORES = [
 ];
 
 const FACTS = [
-  { id: "f1", cat: "football", emoji: "⚽", text: "В футбольной команде на поле играют 11 человек." },
-  { id: "f2", cat: "football", emoji: "🏆", text: "Первый чемпионат мира по футболу прошёл в 1930 году в Уругвае." },
-  { id: "f3", cat: "football", emoji: "⚡", text: "Иногда футболисты забивают гол уже в первые секунды матча!" },
-  { id: "f4", cat: "football", emoji: "🥅", text: "Футбольные ворота намного шире, чем рост взрослого человека." },
-  { id: "f5", cat: "football", emoji: "🇰🇿", text: "Сборная Казахстана по футболу тоже играет в международных турнирах." },
+  { id: "f1", cat: "football", emoji: "🏆", text: "Пеле — единственный футболист, трижды выигравший Чемпионат мира: в 1958, 1962 и 1970 годах." },
+  { id: "f2", cat: "football", emoji: "🇦🇷", text: "Лионель Месси наконец выиграл Кубок мира со сборной Аргентины в 2022 году." },
+  { id: "f3", cat: "football", emoji: "✋", text: "Диего Марадона забил знаменитый гол рукой на чемпионате мира 1986 года — этот гол прозвали «рука Бога»." },
+  { id: "f4", cat: "football", emoji: "⚡", text: "Криштиану Роналду забил больше официальных голов, чем почти любой футболист в истории." },
+  { id: "f5", cat: "football", emoji: "🎩", text: "Килиан Мбаппе забил три гола в одном финале Чемпионата мира 2022 года — такое случается очень редко." },
+  { id: "f6", cat: "football", emoji: "🎯", text: "Если футболист забивает три гола в одном матче, это называют «хет-трик»." },
+  { id: "f7", cat: "football", emoji: "🇰🇿", text: "Сборная Казахстана по футболу играет в отборочных турнирах чемпионата Европы." },
+  { id: "f8", cat: "football", emoji: "⏱️", text: "Самые быстрые голы в истории футбола забивали уже через несколько секунд после свистка судьи." },
   { id: "c1", cat: "countries", emoji: "🌍", text: "В мире около 195 разных стран." },
   { id: "c2", cat: "countries", emoji: "🇰🇿", text: "Казахстан — самая большая в мире страна, у которой нет выхода к открытому океану." },
   { id: "c3", cat: "countries", emoji: "🏝️", text: "В Японии больше 6800 островов!" },
@@ -358,6 +361,8 @@ function defaultStats() {
     levels: {},
     parentPassword: null,
     dailyFacts: pickDailyFactIds(),
+    factsRead: [],
+    factsQuizLastDate: null,
   };
   SUBJECTS.forEach((subj) => { s[subj.id] = { correct: 0, total: 0, sessions: 0 }; s.history[subj.id] = []; s.qstats[subj.id] = {}; s.levels[subj.id] = 1; });
   return s;
@@ -385,6 +390,8 @@ function ensureStatsShape(raw) {
   merged.dailyTasks.chores = { ...((raw.dailyTasks && raw.dailyTasks.chores) || {}) };
 
   merged.dailyFacts = raw.dailyFacts && raw.dailyFacts.ids ? raw.dailyFacts : base.dailyFacts;
+  merged.factsRead = Array.isArray(raw.factsRead) ? raw.factsRead : [];
+  merged.factsQuizLastDate = raw.factsQuizLastDate || null;
 
   if (merged.daily.date !== todayStr()) merged.daily = freshDaily();
   if (merged.dailyTasks.date !== todayStr()) merged.dailyTasks = freshDailyTasks();
@@ -745,6 +752,22 @@ function App() {
     saveStats(next);
   };
 
+  const markFactRead = (factId) => {
+    if (stats.factsRead.includes(factId)) return;
+    const next = clone(stats);
+    next.factsRead = [...next.factsRead, factId];
+    saveStats(next);
+  };
+
+  const finishFactsQuiz = () => {
+    const next = clone(stats);
+    next.factsQuizLastDate = todayStr();
+    saveStats(next);
+    setScreen("facts");
+  };
+
+  const factsQuizAvailable = stats.factsRead.length >= 3 && daysBetween(stats.factsQuizLastDate, todayStr()) >= 7;
+
   const totalStars = stats.totalStars || 0;
   const blocksFilled = Math.min(5, Math.floor(totalStars / 5));
 
@@ -797,7 +820,19 @@ function App() {
 
       {screen === "reward" && <RewardScreen stats={stats} onHome={backHome} />}
 
-      {screen === "facts" && <FactsScreen facts={FACTS.filter((f) => stats.dailyFacts.ids.includes(f.id))} onHome={backHome} />}
+      {screen === "facts" && (
+        <FactsScreen
+          facts={FACTS.filter((f) => stats.dailyFacts.ids.includes(f.id))}
+          onFactShown={markFactRead}
+          quizAvailable={factsQuizAvailable}
+          onStartQuiz={() => setScreen("factsQuiz")}
+          onHome={backHome}
+        />
+      )}
+
+      {screen === "factsQuiz" && (
+        <FactsQuizScreen readFactIds={stats.factsRead} onFinish={finishFactsQuiz} onHome={backHome} />
+      )}
 
       {screen === "parentSetPassword" && (
         <ParentSetPassword value={gateInput} setValue={setGateInput} confirm={gateConfirm} setConfirm={setGateConfirm} error={gateError} onSubmit={createPassword} onCancel={backHome} />
@@ -964,7 +999,7 @@ function QuizScreen({ subject, question, index, total, selected, onAnswer, onNex
           <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>Где это слово?</p>
           <div className="flex items-center gap-3">
             <p className="font-display text-3xl" style={{ color: "#1b1b1b" }}>{question.word}</p>
-            <button onClick={() => speak(question.word, subject.langCode)} className="pixel-btn bg-white px-2 py-2 text-lg">🔊</button>
+            {!subject.noAudio && <button onClick={() => speak(question.word, subject.langCode)} className="pixel-btn bg-white px-2 py-2 text-lg">🔊</button>}
           </div>
           <div className="grid grid-cols-3 gap-2 w-full">
             {question.options.map((opt, idx) => {
@@ -976,7 +1011,7 @@ function QuizScreen({ subject, question, index, total, selected, onAnswer, onNex
               return (
                 <button key={idx} onClick={() => onAnswer(idx)} disabled={selected !== null} className="pixel-btn flex flex-col items-center gap-1 py-3 px-1" style={style}>
                   <span className="text-3xl">{opt.emoji}</span>
-                  <span className="font-body text-[11px]" style={{ color: "#1b1b1b" }}>{opt.word}</span>
+                  <span className="font-body text-[11px]" style={{ color: "#1b1b1b" }}>{opt.ru}</span>
                   {selected !== null && idx === question.correct && <span className="text-xs">✅</span>}
                   {selected !== null && idx === selected && idx !== question.correct && <span className="text-xs">❌</span>}
                 </button>
@@ -1059,7 +1094,7 @@ function LearnScreen({ subject, words, index, onNext, onHome }) {
         <span className="text-6xl">{w.emoji}</span>
         <p className="font-display text-3xl" style={{ color: "#1b1b1b" }}>{w.word}</p>
         <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>{w.ru}</p>
-        <button onClick={() => speak(w.word, subject.langCode)} className="pixel-btn bg-white px-3 py-2 text-lg">🔊 Слушать</button>
+        {!subject.noAudio && <button onClick={() => speak(w.word, subject.langCode)} className="pixel-btn bg-white px-3 py-2 text-lg">🔊 Слушать</button>}
       </div>
 
       <button onClick={onNext} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: subject.color }}>
@@ -1174,14 +1209,26 @@ function ParentSetPassword({ value, setValue, confirm, setConfirm, error, onSubm
   );
 }
 
-function FactsScreen({ facts, onHome }) {
-  const [current, setCurrent] = useState(() => facts[Math.floor(Math.random() * facts.length)]);
+function FactsScreen({ facts, onFactShown, quizAvailable, onStartQuiz, onHome }) {
+  const [order, setOrder] = useState(() => pick(facts, facts.length));
+  const [idx, setIdx] = useState(0);
+  const current = order[idx];
+  const isLast = idx === order.length - 1;
   const catLabel = { football: "⚽ Футбол", countries: "🌍 Страны", history: "🏛️ История" };
-  const nextFact = () => {
-    let f;
-    do { f = facts[Math.floor(Math.random() * facts.length)]; } while (f.id === current.id && facts.length > 1);
-    setCurrent(f);
+
+  useEffect(() => {
+    if (current) onFactShown(current.id);
+  }, [current]);
+
+  const handleNext = () => {
+    if (isLast) {
+      setOrder(pick(facts, facts.length));
+      setIdx(0);
+    } else {
+      setIdx((i) => i + 1);
+    }
   };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -1190,16 +1237,98 @@ function FactsScreen({ facts, onHome }) {
         <span style={{ width: 36 }} />
       </div>
 
-      <p className="font-body text-[10px] text-center" style={{ color: "#8a8a8a" }}>Сегодня — 2 факта по каждой теме, завтра будут новые</p>
+      {quizAvailable && (
+        <button onClick={onStartQuiz} className="pixel-btn p-3 flex items-center gap-2 text-left" style={{ background: "#FFF6D9" }}>
+          <span className="text-xl">🎯</span>
+          <span className="font-body text-xs" style={{ color: "#7a5a00" }}>Пройди викторину по фактам, которые уже узнал!</span>
+        </button>
+      )}
+
+      <p className="font-body text-[10px] text-center" style={{ color: "#8a8a8a" }}>Факт {idx + 1} из {order.length} на сегодня — завтра будут новые</p>
 
       <div key={current.id} className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center" style={{ background: "#E3F2FD" }}>
         <span className="text-6xl">{current.emoji}</span>
         <span className="pixel-btn bg-white px-3 py-1 font-body text-[10px]" style={{ color: "#1b1b1b" }}>{catLabel[current.cat]}</span>
         <p className="font-body text-base" style={{ color: "#1b1b1b" }}>{current.text}</p>
-        <button onClick={() => speak(current.text, "ru-RU")} className="pixel-btn bg-white px-3 py-2 text-lg">🔊 Слушать</button>
       </div>
 
-      <button onClick={nextFact} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#4DA6FF" }}>Ещё факт →</button>
+      <button onClick={handleNext} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#4DA6FF" }}>
+        {isLast ? "Заново →" : "Ещё факт →"}
+      </button>
+    </div>
+  );
+}
+
+function buildFactsQuiz(readFactIds) {
+  const readFacts = FACTS.filter((f) => readFactIds.includes(f.id));
+  const n = Math.min(5, readFacts.length);
+  const chosen = pick(readFacts, n);
+  return chosen.map((f) => {
+    const others = FACTS.filter((x) => x.id !== f.id);
+    const distractors = pick(others, 2).map((x) => x.text);
+    const optionTexts = pick([f.text, ...distractors], 3);
+    return { id: f.id, emoji: f.emoji, cat: f.cat, correct: optionTexts.indexOf(f.text), options: optionTexts };
+  });
+}
+
+function FactsQuizScreen({ readFactIds, onFinish, onHome }) {
+  const [questions] = useState(() => buildFactsQuiz(readFactIds));
+  const [index, setIndex] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const catLabel = { football: "⚽ Футбол", countries: "🌍 Страны", history: "🏛️ История" };
+
+  if (questions.length === 0) {
+    return (
+      <div className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center">
+        <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>Пока маловато фактов для викторины — почитай ещё немного!</p>
+        <button onClick={onHome} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#4DA6FF" }}>🏠 На главную</button>
+      </div>
+    );
+  }
+
+  const q = questions[index];
+  const isCorrect = selected !== null && selected === q.correct;
+
+  const next = () => {
+    if (index + 1 < questions.length) { setIndex((i) => i + 1); setSelected(null); }
+    else onFinish();
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+        <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Викторина по фактам</span>
+        <span className="font-body text-xs pixel-btn bg-white px-3 py-1.5" style={{ color: "#4a4a4a" }}>{index + 1} / {questions.length}</span>
+      </div>
+
+      <div key={q.id} className="pop-in pixel-card p-6 flex flex-col items-center gap-3">
+        <span className="text-5xl">{q.emoji}</span>
+        <span className="pixel-btn bg-white px-3 py-1 font-body text-[10px]" style={{ color: "#1b1b1b" }}>{catLabel[q.cat]}</span>
+        <p className="font-body text-sm text-center" style={{ color: "#5a5a5a" }}>Какой факт про это правильный?</p>
+        <div className="flex flex-col gap-2 w-full">
+          {q.options.map((opt, idx) => {
+            let style = { borderColor: "#1b1b1b", background: "white", color: "#1b1b1b" };
+            if (selected !== null) {
+              if (idx === q.correct) style = { borderColor: "#1b1b1b", background: "#DFF5E1", color: "#1b1b1b" };
+              else if (idx === selected) style = { borderColor: "#1b1b1b", background: "#FFE1DA", color: "#1b1b1b" };
+            }
+            return (
+              <button key={idx} onClick={() => selected === null && setSelected(idx)} disabled={selected !== null} className="pixel-btn w-full text-left px-3 py-2 font-body text-xs" style={style}>
+                {opt}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {selected !== null && (
+        <div className="pop-in pixel-card flex items-center gap-3 p-4" style={{ background: isCorrect ? "#DFF5E1" : "#FFF6D9" }}>
+          <span className="text-3xl">{isCorrect ? "🎉" : "🤔"}</span>
+          <p className="font-body text-sm flex-1" style={{ color: "#1b1b1b" }}>{isCorrect ? "Точно!" : "Почти! Правильный ответ подсвечен зелёным."}</p>
+          <button onClick={next} className="pixel-btn px-4 py-2 font-display text-sm text-white" style={{ background: "#4DA6FF" }}>Далее →</button>
+        </div>
+      )}
     </div>
   );
 }
