@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="theme-color" content="#4DA6FF" />
 <title>Кубо-школа</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>" />
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%234DA6FF%22/><text x=%2250%25%22 y=%2262%25%22 font-size=%2260%22 text-anchor=%22middle%22>🧱</text></svg>" />
+<link rel="apple-touch-icon" href="data:image/png;base64,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" />
 <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js" crossorigin="anonymous"></script>
@@ -69,7 +68,7 @@
 </script>
 
 <script type="text/babel" data-presets="react">
-const { useState, useEffect, useMemo, useCallback } = React;
+const { useState, useEffect, useMemo, useCallback, useRef } = React;
 
 /* ---------------------------------------------------------
    Данные: банки заданий для 1 класса
@@ -205,36 +204,36 @@ const SUBJECTS = [
 const CORRECT_PHRASES = ["Ура! Точно верно!", "Молодец, так держать!", "Кубо гордится тобой!", "Отлично! Ты умница!", "Блок засчитан! Красота!"];
 const WRONG_PHRASES = ["Почти! Давай ещё раз подумаем.", "Не страшно, у тебя получится!", "Подумай ещё немножко."];
 
-const CHORES = [
-  { id: "bed", label: "Убрать постель", icon: "🛏️", excludeDays: [] },
-  { id: "teeth_am", label: "Почистить зубы (утро)", icon: "🪥", excludeDays: [] },
-  { id: "teeth_pm", label: "Почистить зубы (вечер)", icon: "🪥", excludeDays: [] },
-  { id: "toys", label: "Убрать игрушки", icon: "🧸", excludeDays: [] },
-  { id: "lunch", label: "Заказать еду в школе", icon: "🍱", excludeDays: [0, 6] },
-  { id: "backpack", label: "Собрать рюкзак и вещи на завтра", icon: "🎒", excludeDays: [5, 6] },
+const DEFAULT_CHORES = [
+  { id: "bed", label: "Убрать постель", icon: "🛏️" },
+  { id: "teeth_am", label: "Почистить зубы (утро)", icon: "🪥" },
+  { id: "teeth_pm", label: "Почистить зубы (вечер)", icon: "🪥" },
+  { id: "toys", label: "Убрать игрушки", icon: "🧸" },
+  { id: "lunch", label: "Заказать еду в школе", icon: "🍱" },
+  { id: "backpack", label: "Собрать рюкзак и вещи на завтра", icon: "🎒" },
 ];
 
 const FACTS = [
-  { id: "f1", cat: "football", emoji: "🏆", text: "Пеле — единственный футболист, трижды выигравший Чемпионат мира: в 1958, 1962 и 1970 годах." },
-  { id: "f2", cat: "football", emoji: "🇦🇷", text: "Лионель Месси наконец выиграл Кубок мира со сборной Аргентины в 2022 году." },
-  { id: "f3", cat: "football", emoji: "✋", text: "Диего Марадона забил знаменитый гол рукой на чемпионате мира 1986 года — этот гол прозвали «рука Бога»." },
-  { id: "f4", cat: "football", emoji: "⚡", text: "Криштиану Роналду забил больше официальных голов, чем почти любой футболист в истории." },
-  { id: "f5", cat: "football", emoji: "🎩", text: "Килиан Мбаппе забил три гола в одном финале Чемпионата мира 2022 года — такое случается очень редко." },
-  { id: "f6", cat: "football", emoji: "🎯", text: "Если футболист забивает три гола в одном матче, это называют «хет-трик»." },
-  { id: "f7", cat: "football", emoji: "🇰🇿", text: "Сборная Казахстана по футболу играет в отборочных турнирах чемпионата Европы." },
-  { id: "f8", cat: "football", emoji: "⏱️", text: "Самые быстрые голы в истории футбола забивали уже через несколько секунд после свистка судьи." },
-  { id: "c1", cat: "countries", emoji: "🌍", text: "В мире около 195 разных стран." },
-  { id: "c2", cat: "countries", emoji: "🇰🇿", text: "Казахстан — самая большая в мире страна, у которой нет выхода к открытому океану." },
-  { id: "c3", cat: "countries", emoji: "🏝️", text: "В Японии больше 6800 островов!" },
-  { id: "c4", cat: "countries", emoji: "🦘", text: "Австралия — единственная страна, которая занимает целый материк." },
-  { id: "c5", cat: "countries", emoji: "💧", text: "Озеро Байкал в России — самое глубокое озеро на Земле." },
-  { id: "c6", cat: "countries", emoji: "🏜️", text: "В Египте стоят древние пирамиды, которым больше 4000 лет." },
-  { id: "h1", cat: "history", emoji: "🦖", text: "Динозавры жили на Земле миллионы лет назад, задолго до людей." },
-  { id: "h2", cat: "history", emoji: "🎨", text: "Древние люди рисовали на стенах пещер — это самые старые рисунки в мире." },
-  { id: "h3", cat: "history", emoji: "🛞", text: "Колесо придумали больше 5000 лет назад." },
-  { id: "h4", cat: "history", emoji: "🧱", text: "Великая Китайская стена — одно из самых длинных сооружений в мире." },
-  { id: "h5", cat: "history", emoji: "🚀", text: "Юрий Гагарин первым в мире полетел в космос в 1961 году." },
-  { id: "h6", cat: "history", emoji: "🇰🇿", text: "Космодром Байконур, откуда летают в космос, находится в Казахстане!" },
+  { id: "f1", cat: "football", emoji: "🏆", text: "Пеле — единственный футболист, трижды выигравший Чемпионат мира: в 1958, 1962 и 1970 годах." , wrong: ["Пеле никогда не выигрывал Чемпионат мира.", "Пеле выиграл Чемпионат мира только один раз."] },
+  { id: "f2", cat: "football", emoji: "🇦🇷", text: "Лионель Месси наконец выиграл Кубок мира со сборной Аргентины в 2022 году." , wrong: ["Месси никогда не выигрывал Кубок мира.", "Месси выиграл Кубок мира в 2010 году."] },
+  { id: "f3", cat: "football", emoji: "✋", text: "Диего Марадона забил знаменитый гол рукой на чемпионате мира 1986 года — этот гол прозвали «рука Бога»." , wrong: ["Марадона забил этот гол головой.", "Этот случай произошёл на чемпионате мира 2006 года."] },
+  { id: "f4", cat: "football", emoji: "⚡", text: "Криштиану Роналду забил больше официальных голов, чем почти любой футболист в истории." , wrong: ["Роналду забил меньше 100 голов за карьеру.", "Роналду никогда не забивал голов на чемпионатах мира."] },
+  { id: "f5", cat: "football", emoji: "🎩", text: "Килиан Мбаппе забил три гола в одном финале Чемпионата мира 2022 года — такое случается очень редко." , wrong: ["Мбаппе не забил ни одного гола в финале 2022 года.", "Мбаппе забил только один гол в том финале."] },
+  { id: "f6", cat: "football", emoji: "🎯", text: "Если футболист забивает три гола в одном матче, это называют «хет-трик»." , wrong: ["Хет-трик — это когда забивают один гол за матч.", "Хет-трик — это жёлтая карточка."] },
+  { id: "f7", cat: "football", emoji: "🇰🇿", text: "Сборная Казахстана по футболу играет в отборочных турнирах чемпионата Европы." , wrong: ["Сборная Казахстана никогда не играет в отборочных турнирах.", "Казахстан участвует только в чемпионатах Азии."] },
+  { id: "f8", cat: "football", emoji: "⏱️", text: "Самые быстрые голы в истории футбола забивали уже через несколько секунд после свистка судьи." , wrong: ["Самый быстрый гол забили через час после начала матча.", "Быстрые голы в футболе никогда не случаются."] },
+  { id: "c1", cat: "countries", emoji: "🌍", text: "В мире около 195 разных стран." , wrong: ["В мире всего 10 стран.", "В мире около 500 стран."] },
+  { id: "c2", cat: "countries", emoji: "🇰🇿", text: "Казахстан — самая большая в мире страна, у которой нет выхода к открытому океану." , wrong: ["Казахстан имеет выход к открытому океану.", "Самая большая страна без выхода к океану — Монголия."] },
+  { id: "c3", cat: "countries", emoji: "🏝️", text: "В Японии больше 6800 островов!" , wrong: ["В Японии всего один остров.", "В Японии около 50 островов."] },
+  { id: "c4", cat: "countries", emoji: "🦘", text: "Австралия — единственная страна, которая занимает целый материк." , wrong: ["Австралия находится в Европе.", "Ещё одна страна тоже занимает целый материк — Франция."] },
+  { id: "c5", cat: "countries", emoji: "💧", text: "Озеро Байкал в России — самое глубокое озеро на Земле." , wrong: ["Байкал — самое маленькое озеро в мире.", "Самое глубокое озеро находится в Африке."] },
+  { id: "c6", cat: "countries", emoji: "🏜️", text: "В Египте стоят древние пирамиды, которым больше 4000 лет." , wrong: ["Пирамидам в Египте меньше 100 лет.", "Египетские пирамиды находятся в Канаде."] },
+  { id: "h1", cat: "history", emoji: "🦖", text: "Динозавры жили на Земле миллионы лет назад, задолго до людей." , wrong: ["Динозавры жили одновременно с людьми.", "Динозавры появились совсем недавно."] },
+  { id: "h2", cat: "history", emoji: "🎨", text: "Древние люди рисовали на стенах пещер — это самые старые рисунки в мире." , wrong: ["Самые старые рисунки сделаны на компьютере.", "Древние люди никогда не рисовали."] },
+  { id: "h3", cat: "history", emoji: "🛞", text: "Колесо придумали больше 5000 лет назад." , wrong: ["Колесо придумали в прошлом веке.", "Колесо существовало всегда, с самого начала Земли."] },
+  { id: "h4", cat: "history", emoji: "🧱", text: "Великая Китайская стена — одно из самых длинных сооружений в мире." , wrong: ["Великая Китайская стена — самое короткое сооружение в мире.", "Эту стену построили за один день."] },
+  { id: "h5", cat: "history", emoji: "🚀", text: "Юрий Гагарин первым в мире полетел в космос в 1961 году." , wrong: ["Первым в космос полетел американец.", "Юрий Гагарин полетел в космос в 2001 году."] },
+  { id: "h6", cat: "history", emoji: "🇰🇿", text: "Космодром Байконур, откуда летают в космос, находится в Казахстане!" , wrong: ["Байконур находится в Америке.", "С Байконура никогда не запускали ракеты."] },
 ];
 
 const WEEKLY_CAP = 3000;
@@ -319,13 +318,19 @@ function randomPhrase(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function todayStr() {
+function effectiveNow() {
   const d = new Date();
+  if (d.getHours() < 6) d.setDate(d.getDate() - 1);
+  return d;
+}
+
+function todayStr() {
+  const d = effectiveNow();
   return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
 }
 
 function mondayStr() {
-  const d = new Date();
+  const d = effectiveNow();
   const day = (d.getDay() + 6) % 7;
   d.setDate(d.getDate() - day);
   return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -356,6 +361,10 @@ function freshDailyTasks() {
   };
 }
 
+function freshDailyBalance() {
+  return { date: todayStr(), answers: {} };
+}
+
 function pickDailyFactIds() {
   const cats = ["football", "countries", "history"];
   let selected = [];
@@ -380,6 +389,9 @@ function defaultStats() {
     dailyFacts: pickDailyFactIds(),
     factsRead: [],
     factsQuizLastDate: null,
+    chores: clone(DEFAULT_CHORES),
+    balanceTopics: [],
+    dailyBalance: freshDailyBalance(),
   };
   SUBJECTS.forEach((subj) => { s[subj.id] = { correct: 0, total: 0, sessions: 0 }; s.history[subj.id] = []; s.qstats[subj.id] = {}; s.levels[subj.id] = 1; });
   return s;
@@ -409,10 +421,14 @@ function ensureStatsShape(raw) {
   merged.dailyFacts = raw.dailyFacts && raw.dailyFacts.ids ? raw.dailyFacts : base.dailyFacts;
   merged.factsRead = Array.isArray(raw.factsRead) ? raw.factsRead : [];
   merged.factsQuizLastDate = raw.factsQuizLastDate || null;
+  merged.chores = Array.isArray(raw.chores) ? raw.chores : clone(DEFAULT_CHORES);
+  merged.balanceTopics = Array.isArray(raw.balanceTopics) ? raw.balanceTopics : [];
+  merged.dailyBalance = raw.dailyBalance && raw.dailyBalance.date ? raw.dailyBalance : freshDailyBalance();
 
   if (merged.daily.date !== todayStr()) merged.daily = freshDaily();
   if (merged.dailyTasks.date !== todayStr()) merged.dailyTasks = freshDailyTasks();
   if (merged.dailyFacts.date !== todayStr()) merged.dailyFacts = pickDailyFactIds();
+  if (merged.dailyBalance.date !== todayStr()) merged.dailyBalance = freshDailyBalance();
   if (merged.money.weekStart !== mondayStr()) merged.money = { ...merged.money, weekStart: mondayStr(), weekEarned: 0 };
 
   return merged;
@@ -429,9 +445,35 @@ function awardMoney(next, amount) {
 const STORAGE_PROFILE = "barys-profile";
 const STORAGE_STATS = "barys-stats";
 const STORAGE_SESSION = "barys-session";
+const CONTENT_REMINDER_KEY = "barys-content-reminder-ack";
+
+function getContentReminderMonthKey() {
+  const d = new Date();
+  const day = d.getDate();
+  const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  if (day === lastDay) {
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+  }
+  if (day === 1) {
+    const prevMonthLastDay = new Date(d.getFullYear(), d.getMonth(), 0);
+    return prevMonthLastDay.getFullYear() + "-" + String(prevMonthLastDay.getMonth() + 1).padStart(2, "0");
+  }
+  return null;
+}
 
 function clearSession() {
   try { localStorage.removeItem(STORAGE_SESSION); } catch (e) {}
+}
+
+function loadValidSession() {
+  const s = loadLocal(STORAGE_SESSION, null);
+  if (!s || s.date !== todayStr() || !s.subjectId || !s.questions || !s.questions.length) return null;
+  const subjectObj = SUBJECTS.find((x) => x.id === s.subjectId);
+  if (!subjectObj) { clearSession(); return null; }
+  const validIds = (subjectObj.words ? subjectObj.words : subjectObj.bank).map((it) => it.id);
+  const allValid = s.questions.every((q) => validIds.includes(q.id));
+  if (!allValid) { clearSession(); return null; }
+  return { ...s, subjectObj };
 }
 
 function loadLocal(key, fallback) {
@@ -493,33 +535,36 @@ function App() {
 
   const [screen, setScreen] = useState(() => {
     if (!loadLocal(STORAGE_PROFILE, null)) return "setup";
-    const s = loadLocal(STORAGE_SESSION, null);
-    if (s && s.date === todayStr()) {
+    const s = loadValidSession();
+    if (s) {
       const st = ensureStatsShape(loadLocal(STORAGE_STATS, defaultStats()));
       const doneAlready = st.daily[s.subjectId] && st.daily[s.subjectId].done;
-      if (!doneAlready && s.subjectId && s.questions && s.questions.length) return "quiz";
+      if (!doneAlready) return "quiz";
     }
     return "home";
   });
   const [nameInput, setNameInput] = useState("");
 
   const [subject, setSubject] = useState(() => {
-    const s = loadLocal(STORAGE_SESSION, null);
-    if (s && s.date === todayStr()) return SUBJECTS.find((x) => x.id === s.subjectId) || null;
-    return null;
+    const s = loadValidSession();
+    return s ? s.subjectObj : null;
   });
   const [questions, setQuestions] = useState(() => {
-    const s = loadLocal(STORAGE_SESSION, null);
-    return (s && s.date === todayStr() && s.questions) ? s.questions : [];
+    const s = loadValidSession();
+    return s ? s.questions : [];
   });
   const [qIndex, setQIndex] = useState(() => {
-    const s = loadLocal(STORAGE_SESSION, null);
-    return (s && s.date === todayStr()) ? (s.qIndex || 0) : 0;
+    const s = loadValidSession();
+    return s ? (s.qIndex || 0) : 0;
   });
   const [selected, setSelected] = useState(null);
   const [sessionCorrect, setSessionCorrect] = useState(() => {
-    const s = loadLocal(STORAGE_SESSION, null);
-    return (s && s.date === todayStr()) ? (s.correctSoFar || 0) : 0;
+    const s = loadValidSession();
+    return s ? (s.correctSoFar || 0) : 0;
+  });
+  const [isBonusRound, setIsBonusRound] = useState(() => {
+    const s = loadValidSession();
+    return s ? !!s.isBonusRound : false;
   });
   const [earnedBreakdown, setEarnedBreakdown] = useState({ answers: 0, perfect: 0, allBonus: 0 });
   const [alreadyDoneToday, setAlreadyDoneToday] = useState(false);
@@ -530,8 +575,23 @@ function App() {
   const [gateInput, setGateInput] = useState("");
   const [gateConfirm, setGateConfirm] = useState("");
   const [gateError, setGateError] = useState("");
+  const [recoverProblem, setRecoverProblem] = useState({ a: 767, b: 73 });
+  const [recoverInput, setRecoverInput] = useState("");
+  const [recoverError, setRecoverError] = useState("");
 
   const [storageWarning, setStorageWarning] = useState(false);
+
+  const contentReminderKey = useMemo(() => getContentReminderMonthKey(), []);
+  const [showContentReminder, setShowContentReminder] = useState(() => {
+    const key = getContentReminderMonthKey();
+    if (!key) return false;
+    try { return localStorage.getItem(CONTENT_REMINDER_KEY) !== key; } catch (e) { return false; }
+  });
+
+  const dismissContentReminder = () => {
+    try { if (contentReminderKey) localStorage.setItem(CONTENT_REMINDER_KEY, contentReminderKey); } catch (e) {}
+    setShowContentReminder(false);
+  };
 
   useEffect(() => {
     const s = loadLocal(STORAGE_SESSION, null);
@@ -540,17 +600,14 @@ function App() {
 
   useEffect(() => {
     if (screen === "quiz" && subject && questions.length) {
-      saveLocal(STORAGE_SESSION, { date: todayStr(), subjectId: subject.id, questions, qIndex, correctSoFar: sessionCorrect });
+      saveLocal(STORAGE_SESSION, { date: todayStr(), subjectId: subject.id, questions, qIndex, correctSoFar: sessionCorrect, isBonusRound });
     }
-  }, [screen, subject, questions, qIndex, sessionCorrect]);
+  }, [screen, subject, questions, qIndex, sessionCorrect, isBonusRound]);
 
-  const activeChores = useMemo(() => {
-    const dow = new Date().getDay();
-    return CHORES.filter((c) => !c.excludeDays.includes(dow));
-  }, []);
+  const activeChores = stats.chores || [];
 
   const saveProfile = useCallback((name) => {
-    const p = { name };
+    const p = { name, createdAt: todayStr() };
     setProfile(p);
     if (!saveLocal(STORAGE_PROFILE, p)) setStorageWarning(true);
     setScreen("home");
@@ -561,7 +618,7 @@ function App() {
     if (!saveLocal(STORAGE_STATS, next)) setStorageWarning(true);
   }, []);
 
-  const startSession = (subj) => {
+  const startSession = (subj, bonus) => {
     const level = stats.levels[subj.id] || 1;
     const pool = poolForLevel(subj.bank, level);
     const qs = selectSmart(pool, stats.qstats[subj.id], subj.size);
@@ -570,6 +627,7 @@ function App() {
     setQIndex(0);
     setSelected(null);
     setSessionCorrect(0);
+    setIsBonusRound(!!bonus);
     setScreen("quiz");
   };
 
@@ -589,9 +647,25 @@ function App() {
       setSubject(subj);
       setLangWords(chosenWords);
       setLearnIndex(0);
+      setIsBonusRound(false);
       setScreen("learn");
     } else {
-      startSession(subj);
+      startSession(subj, false);
+    }
+  };
+
+  const practiceAgain = (subj) => {
+    const level = stats.levels[subj.id] || 1;
+    if (subj.words) {
+      const pool = poolForLevel(subj.words, level);
+      const chosenWords = selectSmart(pool, stats.qstats[subj.id], subj.size);
+      setSubject(subj);
+      setLangWords(chosenWords);
+      setLearnIndex(0);
+      setIsBonusRound(true);
+      setScreen("learn");
+    } else {
+      startSession(subj, true);
     }
   };
 
@@ -636,6 +710,15 @@ function App() {
   };
 
   const finishSession = () => {
+    if (isBonusRound) {
+      setEarnedBreakdown({ answers: 0, perfect: 0, allBonus: 0 });
+      setAlreadyDoneToday(true);
+      setJustLeveledUp(false);
+      clearSession();
+      setScreen("summary");
+      return;
+    }
+
     const next = clone(stats);
     const wasDoneAlready = !!(next.daily[subject.id] && next.daily[subject.id].done);
 
@@ -740,9 +823,33 @@ function App() {
     setScreen(stats.parentPassword ? "parentGate" : "parentSetPassword");
   };
 
-  const checkGate = () => {
-    if (gateInput === stats.parentPassword) setScreen("parentDashboard");
+  const checkGate = (val) => {
+    const v = typeof val === "string" ? val : gateInput;
+    if (v === stats.parentPassword) setScreen("parentDashboard");
     else setGateError("Неверный пароль. Попробуйте ещё раз.");
+  };
+
+  const startRecoverPassword = () => {
+    const a = 100 + Math.floor(Math.random() * 900);
+    const b = 10 + Math.floor(Math.random() * 90);
+    setRecoverProblem({ a, b });
+    setRecoverInput("");
+    setRecoverError("");
+    setScreen("parentRecover");
+  };
+
+  const checkRecoverPassword = () => {
+    if (parseInt(recoverInput, 10) === recoverProblem.a + recoverProblem.b) {
+      const next = clone(stats);
+      next.parentPassword = null;
+      saveStats(next);
+      setGateInput("");
+      setGateConfirm("");
+      setGateError("");
+      setScreen("parentSetPassword");
+    } else {
+      setRecoverError("Неверно, попробуйте ещё раз.");
+    }
   };
 
   const createPassword = () => {
@@ -769,6 +876,85 @@ function App() {
     saveStats(next);
   };
 
+  const exportBackup = () => {
+    try {
+      const payload = { exportedAt: new Date().toISOString(), profile, stats };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const fileDate = todayStr();
+      a.href = url;
+      a.download = "kubo-shkola-backup-" + fileDate + ".json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert("Не удалось создать резервную копию: " + e.message);
+    }
+  };
+
+  const importBackup = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (!parsed || !parsed.stats) throw new Error("Файл повреждён или не тот формат.");
+        if (!window.confirm("Заменить весь текущий прогресс данными из файла? Это действие нельзя отменить.")) return;
+        const restoredStats = ensureStatsShape(parsed.stats);
+        const restoredProfile = parsed.profile || profile;
+        setStats(restoredStats);
+        setProfile(restoredProfile);
+        saveLocal(STORAGE_STATS, restoredStats);
+        saveLocal(STORAGE_PROFILE, restoredProfile);
+        alert("Прогресс восстановлен из резервной копии!");
+      } catch (err) {
+        alert("Не удалось прочитать файл: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const addChore = (chore) => {
+    const next = clone(stats);
+    next.chores = [...next.chores, { id: "chore_" + Date.now(), label: chore.label, icon: chore.icon || "✅" }];
+    saveStats(next);
+  };
+
+  const updateChore = (id, patch) => {
+    const next = clone(stats);
+    next.chores = next.chores.map((c) => (c.id === id ? { ...c, ...patch } : c));
+    saveStats(next);
+  };
+
+  const deleteChore = (id) => {
+    const next = clone(stats);
+    next.chores = next.chores.filter((c) => c.id !== id);
+    delete next.dailyTasks.chores[id];
+    saveStats(next);
+  };
+
+  const addBalanceTopic = (topic) => {
+    const next = clone(stats);
+    next.balanceTopics = [...next.balanceTopics, { id: "bal_" + Date.now(), label: topic.label, icon: topic.icon || "⏳" }];
+    saveStats(next);
+  };
+
+  const deleteBalanceTopic = (id) => {
+    const next = clone(stats);
+    next.balanceTopics = next.balanceTopics.filter((t) => t.id !== id);
+    const answers = { ...next.dailyBalance.answers };
+    delete answers[id];
+    next.dailyBalance = { ...next.dailyBalance, answers };
+    saveStats(next);
+  };
+
+  const answerBalance = (topicId, value) => {
+    const next = clone(stats);
+    next.dailyBalance = { ...next.dailyBalance, answers: { ...next.dailyBalance.answers, [topicId]: value } };
+    saveStats(next);
+  };
+
   const markFactRead = (factId) => {
     if (stats.factsRead.includes(factId)) return;
     const next = clone(stats);
@@ -784,6 +970,12 @@ function App() {
   };
 
   const factsQuizAvailable = stats.factsRead.length >= 3 && daysBetween(stats.factsQuizLastDate, todayStr()) >= 7;
+
+  const feedbackDelay = useMemo(() => {
+    if (!profile || !profile.createdAt) return 1400;
+    const days = daysBetween(profile.createdAt, todayStr());
+    return days < 30 ? 2200 : 1400;
+  }, [profile]);
 
   const totalStars = stats.totalStars || 0;
   const blocksFilled = Math.min(5, Math.floor(totalStars / 5));
@@ -812,9 +1004,11 @@ function App() {
           inProgressSubjectId={subject && qIndex < questions.length ? subject.id : null}
           inProgressIndex={qIndex}
           onPick={openSubject}
+          onPracticeAgain={practiceAgain}
           onParent={openParentGate}
           onReward={() => setScreen("reward")}
           onFacts={() => setScreen("facts")}
+          onBalance={() => setScreen("balance")}
           onClaimHomework={claimHomework}
           onClaimChore={claimChore}
         />
@@ -828,14 +1022,18 @@ function App() {
       )}
 
       {screen === "quiz" && subject && currentQuestion && (
-        <QuizScreen subject={subject} question={currentQuestion} index={qIndex} total={questions.length} selected={selected} onAnswer={handleAnswer} onNext={nextQuestion} onHome={backHome} />
+        <QuizScreen subject={subject} question={currentQuestion} index={qIndex} total={questions.length} selected={selected} onAnswer={handleAnswer} onNext={nextQuestion} onHome={backHome} feedbackDelay={feedbackDelay} />
       )}
 
       {screen === "summary" && subject && (
-        <SummaryScreen subject={subject} correct={sessionCorrect} total={questions.length} breakdown={earnedBreakdown} alreadyDoneToday={alreadyDoneToday} justLeveledUp={justLeveledUp} onHome={backHome} />
+        <SummaryScreen subject={subject} correct={sessionCorrect} total={questions.length} breakdown={earnedBreakdown} alreadyDoneToday={alreadyDoneToday} isBonusRound={isBonusRound} justLeveledUp={justLeveledUp} onHome={backHome} />
       )}
 
       {screen === "reward" && <RewardScreen stats={stats} onHome={backHome} />}
+
+      {screen === "balance" && (
+        <BalanceScreen topics={stats.balanceTopics} answers={stats.dailyBalance.answers} onAnswer={answerBalance} onHome={backHome} />
+      )}
 
       {screen === "facts" && (
         <FactsScreen
@@ -856,7 +1054,11 @@ function App() {
       )}
 
       {screen === "parentGate" && (
-        <ParentGate value={gateInput} setValue={setGateInput} error={gateError} onSubmit={checkGate} onCancel={backHome} />
+        <ParentGate value={gateInput} setValue={setGateInput} error={gateError} onSubmit={checkGate} onCancel={backHome} onForgot={startRecoverPassword} expectedPassword={stats.parentPassword} />
+      )}
+
+      {screen === "parentRecover" && (
+        <ParentRecover problem={recoverProblem} value={recoverInput} setValue={setRecoverInput} error={recoverError} onSubmit={checkRecoverPassword} onCancel={backHome} />
       )}
 
       {screen === "parentDashboard" && (
@@ -873,7 +1075,21 @@ function App() {
           onApproveChore={approveChore}
           onRejectChore={rejectChore}
           onChangePassword={changePassword}
+          onAddChore={addChore}
+          onUpdateChore={updateChore}
+          onDeleteChore={deleteChore}
+          onAddBalanceTopic={addBalanceTopic}
+          onDeleteBalanceTopic={deleteBalanceTopic}
+          onExportBackup={exportBackup}
+          onImportBackup={importBackup}
+          onReviewContent={() => setScreen("parentContentReview")}
         />
+      )}
+
+      {screen === "parentContentReview" && <ContentReview onBack={() => setScreen("parentDashboard")} />}
+
+      {screen === "parentDashboard" && showContentReminder && (
+        <ContentReminderModal onDismiss={dismissContentReminder} />
       )}
     </Shell>
   );
@@ -881,7 +1097,7 @@ function App() {
 
 function Shell({ children }) {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-blocks" style={{ background: "linear-gradient(180deg, #BEEBFF 0%, #9FDDF7 100%)", fontFamily: "'Manrope', sans-serif" }}>
+    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-blocks" style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #BEEBFF 0%, #9FDDF7 100%)", fontFamily: "'Manrope', sans-serif" }}>
       <div className="w-full max-w-md relative">{children}</div>
     </div>
   );
@@ -903,7 +1119,7 @@ function SetupScreen({ nameInput, setNameInput, onStart }) {
   );
 }
 
-function HomeScreen({ profile, blocksFilled, totalStars, stats, activeChores, inProgressSubjectId, inProgressIndex, onPick, onParent, onReward, onFacts, onClaimHomework, onClaimChore }) {
+function HomeScreen({ profile, blocksFilled, totalStars, stats, activeChores, inProgressSubjectId, inProgressIndex, onPick, onPracticeAgain, onParent, onReward, onFacts, onBalance, onClaimHomework, onClaimChore }) {
   const hw = stats.dailyTasks.homework;
   return (
     <div className="flex flex-col gap-4">
@@ -924,19 +1140,25 @@ function HomeScreen({ profile, blocksFilled, totalStars, stats, activeChores, in
           else if (inProgress) { statusLabel = "▶️ Продолжить: вопрос " + (inProgressIndex + 1) + "/10"; statusColor = "#7a5a00"; }
           else { statusLabel = "Одна попытка сегодня"; statusColor = "#8a8a8a"; }
           return (
-            <button
-              key={s.id}
-              onClick={() => onPick(s)}
-              disabled={d.done}
-              className="pixel-btn p-4 flex flex-col items-start gap-2 text-left relative"
-              style={{ borderColor: "#1b1b1b", background: d.done ? "#F3F3F3" : inProgress ? "#FFF6D9" : "white" }}
-            >
-              {d.done && <span className="absolute -top-2 -right-2 text-lg">✅</span>}
-              <div className="rounded-md p-2 text-xl" style={{ background: s.color + "33", border: "2px solid " + s.color }}>{s.icon}</div>
-              <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>{s.name}</span>
-              <span className="font-body text-xs" style={{ color: "#5a5a5a" }}>{s.tagline}</span>
-              <span className="font-body text-[10px] mt-0.5" style={{ color: statusColor }}>{statusLabel}</span>
-            </button>
+            <div key={s.id} className="flex flex-col gap-1">
+              <button
+                onClick={() => onPick(s)}
+                disabled={d.done}
+                className="pixel-btn p-4 flex flex-col items-start gap-2 text-left relative w-full"
+                style={{ borderColor: "#1b1b1b", background: d.done ? "#F3F3F3" : inProgress ? "#FFF6D9" : "white" }}
+              >
+                {d.done && <span className="absolute -top-2 -right-2 text-lg">✅</span>}
+                <div className="rounded-md p-2 text-xl" style={{ background: s.color + "33", border: "2px solid " + s.color }}>{s.icon}</div>
+                <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>{s.name}</span>
+                <span className="font-body text-xs" style={{ color: "#5a5a5a" }}>{s.tagline}</span>
+                <span className="font-body text-[10px] mt-0.5" style={{ color: statusColor }}>{statusLabel}</span>
+              </button>
+              {d.done && (
+                <button onClick={() => onPracticeAgain(s)} className="pixel-btn py-1.5 font-body text-[10px] bg-white" style={{ color: "#5a5a5a" }}>
+                  🔁 Ещё раз для тренировки (без награды)
+                </button>
+              )}
+            </div>
           );
         })}
         <div className="pixel-btn p-4 flex flex-col items-center justify-center gap-1" style={{ background: "#FFF6D9" }}>
@@ -988,6 +1210,16 @@ function HomeScreen({ profile, blocksFilled, totalStars, stats, activeChores, in
         </div>
       </button>
 
+      {stats.balanceTopics.length > 0 && (
+        <button onClick={onBalance} className="pixel-btn p-4 flex items-center gap-3 text-left" style={{ background: "#F3E5F5" }}>
+          <span className="text-2xl">🌤️</span>
+          <div>
+            <p className="font-display text-sm" style={{ color: "#1b1b1b" }}>Баланс дня</p>
+            <p className="font-body text-[10px]" style={{ color: "#5a5a5a" }}>Необязательно — честно расскажи, как прошёл день</p>
+          </div>
+        </button>
+      )}
+
       <div className="flex gap-2 justify-center">
         <button onClick={onReward} className="pixel-btn flex items-center gap-1.5 text-xs font-body px-3 py-2 bg-white" style={{ color: "#4a4a4a" }}>🏆 Копилка</button>
         <button onClick={onParent} className="pixel-btn flex items-center gap-1.5 text-xs font-body px-3 py-2 bg-white" style={{ color: "#4a4a4a" }}>🔒 Кабинет родителя</button>
@@ -996,8 +1228,14 @@ function HomeScreen({ profile, blocksFilled, totalStars, stats, activeChores, in
   );
 }
 
-function QuizScreen({ subject, question, index, total, selected, onAnswer, onNext, onHome }) {
+function QuizScreen({ subject, question, index, total, selected, onAnswer, onNext, onHome, feedbackDelay }) {
   const isCorrect = selected !== null && selected === question.correct;
+
+  useEffect(() => {
+    if (selected === null) return;
+    const t = setTimeout(() => { onNext(); }, feedbackDelay);
+    return () => clearTimeout(t);
+  }, [selected]);
 
   if (question.isLang) {
     return (
@@ -1121,7 +1359,7 @@ function LearnScreen({ subject, words, index, onNext, onHome }) {
   );
 }
 
-function SummaryScreen({ subject, correct, total, breakdown, alreadyDoneToday, justLeveledUp, onHome }) {
+function SummaryScreen({ subject, correct, total, breakdown, alreadyDoneToday, isBonusRound, justLeveledUp, onHome }) {
   const pct = Math.round((correct / total) * 100);
   const cheer = pct >= 80 ? "Ты справился отлично!" : pct >= 50 ? "Хороший результат!" : "Ещё немного практики — и всё получится!";
   const totalEarned = (breakdown.answers || 0) + (breakdown.perfect || 0) + (breakdown.allBonus || 0);
@@ -1138,7 +1376,13 @@ function SummaryScreen({ subject, correct, total, breakdown, alreadyDoneToday, j
         </div>
       )}
 
-      {totalEarned > 0 && (
+      {isBonusRound && (
+        <div className="pixel-card p-3 w-full" style={{ background: "#F0F0F0" }}>
+          <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>🔁 Это была дополнительная тренировка по твоему желанию — без денег, но полезно для памяти!</p>
+        </div>
+      )}
+
+      {!isBonusRound && totalEarned > 0 && (
         <div className="pixel-card p-3 flex flex-col gap-1 w-full" style={{ background: "#FFF6D9" }}>
           {breakdown.answers > 0 && <p className="font-body text-xs" style={{ color: "#7a5a00" }}>+ {breakdown.answers} ₸ за {correct} правильных ответов</p>}
           {breakdown.perfect > 0 && <p className="font-body text-xs" style={{ color: "#7a5a00" }}>+ {breakdown.perfect} ₸ бонус за 10 из 10!</p>}
@@ -1146,10 +1390,10 @@ function SummaryScreen({ subject, correct, total, breakdown, alreadyDoneToday, j
           <p className="font-display text-sm" style={{ color: "#7a5a00" }}>Итого: + {totalEarned} ₸ в копилку</p>
         </div>
       )}
-      {totalEarned === 0 && alreadyDoneToday && <p className="font-body text-xs" style={{ color: "#8a8a8a" }}>Сегодня это уже засчитано — потренироваться можно, но копилка не изменится.</p>}
-      {totalEarned === 0 && !alreadyDoneToday && correct === 0 && <p className="font-body text-xs" style={{ color: "#8a8a8a" }}>Каждый правильный ответ приносит монеты — попробуй ещё раз!</p>}
+      {!isBonusRound && totalEarned === 0 && alreadyDoneToday && <p className="font-body text-xs" style={{ color: "#8a8a8a" }}>Сегодня это уже засчитано — потренироваться можно, но копилка не изменится.</p>}
+      {!isBonusRound && totalEarned === 0 && !alreadyDoneToday && correct === 0 && <p className="font-body text-xs" style={{ color: "#8a8a8a" }}>Каждый правильный ответ приносит монеты — попробуй ещё раз!</p>}
 
-      <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>Предмет доступен один раз в день — следующая попытка завтра.</p>
+      <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>Предмет доступен один раз в день с наградой — следующая попытка с деньгами завтра.</p>
 
       <div className="w-full mt-1">
         <button onClick={onHome} className="pixel-btn w-full py-3 font-display text-sm text-white" style={{ background: subject.color }}>🏠 На главную</button>
@@ -1185,7 +1429,54 @@ function RewardScreen({ stats, onHome }) {
   );
 }
 
-function ParentGate({ value, setValue, error, onSubmit, onCancel }) {
+function BalanceScreen({ topics, answers, onAnswer, onHome }) {
+  const feedback = {
+    none: { emoji: "🌟", text: "Отлично! Ты хорошо распределил своё время сегодня!" },
+    little: { emoji: "🎉", text: "Молодец! Неплохой баланс!" },
+    much: { emoji: "🌤️", text: "Ничего страшного, завтра получится лучше! Я в тебя верю 💛" },
+  };
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+        <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Баланс дня</span>
+        <span style={{ width: 36 }} />
+      </div>
+      <p className="font-body text-[11px] text-center" style={{ color: "#8a8a8a" }}>Необязательно, честно — это просто для тебя самого</p>
+
+      {topics.map((t) => {
+        const answered = answers[t.id];
+        return (
+          <div key={t.id} className="pixel-card p-4 flex flex-col gap-2">
+            <p className="font-body text-sm text-center" style={{ color: "#1b1b1b" }}>Сегодня «{t.icon} {t.label}» было —</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[["none", "Совсем нет"], ["little", "Немного"], ["much", "Много"]].map(([val, label]) => (
+                <button
+                  key={val}
+                  onClick={() => onAnswer(t.id, val)}
+                  className="pixel-btn py-2 font-body text-xs"
+                  style={{ background: answered === val ? "#F3E5F5" : "white", color: "#1b1b1b" }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            {answered && (
+              <p className="font-body text-xs text-center" style={{ color: "#7a5a00" }}>{feedback[answered].emoji} {feedback[answered].text}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ParentGate({ value, setValue, error, onSubmit, onCancel, onForgot, expectedPassword }) {
+  const handleChange = (e) => {
+    const v = e.target.value;
+    setValue(v);
+    if (expectedPassword && v.length >= expectedPassword.length) onSubmit(v);
+  };
   return (
     <div className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center">
       <div className="text-3xl">🔒</div>
@@ -1193,7 +1484,7 @@ function ParentGate({ value, setValue, error, onSubmit, onCancel }) {
       <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>Введите пароль:</p>
       <input
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={handleChange}
         type="password"
         autoFocus
         onKeyDown={(e) => e.key === "Enter" && onSubmit()}
@@ -1201,9 +1492,37 @@ function ParentGate({ value, setValue, error, onSubmit, onCancel }) {
         style={{ borderColor: error ? "#c0392b" : "#1b1b1b" }}
       />
       {error && <p className="font-body text-xs" style={{ color: "#c0392b" }}>{error}</p>}
+      <button onClick={onForgot} className="font-body text-[11px] underline" style={{ color: "#5a5a5a" }}>Забыли пароль?</button>
       <div className="flex gap-2 w-full mt-1">
         <button onClick={onCancel} className="pixel-btn flex-1 py-3 font-display text-sm bg-white" style={{ color: "#1b1b1b" }}>Назад</button>
         <button onClick={onSubmit} className="pixel-btn flex-1 py-3 font-display text-sm text-white" style={{ background: "#4DA6FF" }}>Войти</button>
+      </div>
+    </div>
+  );
+}
+
+function ParentRecover({ problem, value, setValue, error, onSubmit, onCancel }) {
+  return (
+    <div className="pop-in pixel-card p-8 flex flex-col items-center gap-4 text-center">
+      <div className="text-3xl">🧮</div>
+      <h2 className="font-display text-lg" style={{ color: "#1b1b1b" }}>Восстановление пароля</h2>
+      <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>Это проверка «для взрослых» — решите пример:</p>
+      <p className="font-display text-2xl" style={{ color: "#4DA6FF" }}>{problem.a} + {problem.b} = ?</p>
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        type="number"
+        inputMode="numeric"
+        autoFocus
+        onKeyDown={(e) => e.key === "Enter" && onSubmit()}
+        className="w-32 rounded-lg border-2 px-3 py-2 text-center font-body text-lg focus:outline-none"
+        style={{ borderColor: error ? "#c0392b" : "#1b1b1b" }}
+      />
+      {error && <p className="font-body text-xs" style={{ color: "#c0392b" }}>{error}</p>}
+      <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>Верный ответ сбросит старый пароль и откроет создание нового. Прогресс и деньги ребёнка не затронуты.</p>
+      <div className="flex gap-2 w-full mt-1">
+        <button onClick={onCancel} className="pixel-btn flex-1 py-3 font-display text-sm bg-white" style={{ color: "#1b1b1b" }}>Назад</button>
+        <button onClick={onSubmit} className="pixel-btn flex-1 py-3 font-display text-sm text-white" style={{ background: "#4DA6FF" }}>Проверить</button>
       </div>
     </div>
   );
@@ -1281,9 +1600,7 @@ function buildFactsQuiz(readFactIds) {
   const n = Math.min(5, readFacts.length);
   const chosen = pick(readFacts, n);
   return chosen.map((f) => {
-    const others = FACTS.filter((x) => x.id !== f.id);
-    const distractors = pick(others, 2).map((x) => x.text);
-    const optionTexts = pick([f.text, ...distractors], 3);
+    const optionTexts = pick([f.text, ...f.wrong], 3);
     return { id: f.id, emoji: f.emoji, cat: f.cat, correct: optionTexts.indexOf(f.text), options: optionTexts };
   });
 }
@@ -1369,7 +1686,26 @@ function DynamicsRow({ subject, history }) {
   );
 }
 
-function ParentDashboard({ profile, stats, totalStars, chartData, activeChores, onHome, onPayout, onApproveHomework, onRejectHomework, onApproveChore, onRejectChore, onChangePassword }) {
+function ParentDashboard({ profile, stats, totalStars, chartData, activeChores, onHome, onPayout, onApproveHomework, onRejectHomework, onApproveChore, onRejectChore, onChangePassword, onAddChore, onUpdateChore, onDeleteChore, onAddBalanceTopic, onDeleteBalanceTopic, onExportBackup, onImportBackup, onReviewContent }) {
+  const [newChoreLabel, setNewChoreLabel] = useState("");
+  const [newChoreIcon, setNewChoreIcon] = useState("✅");
+  const [newTopicLabel, setNewTopicLabel] = useState("");
+  const [newTopicIcon, setNewTopicIcon] = useState("⏳");
+
+  const handleAddChore = () => {
+    if (!newChoreLabel.trim()) return;
+    onAddChore({ label: newChoreLabel.trim(), icon: newChoreIcon.trim() || "✅" });
+    setNewChoreLabel("");
+    setNewChoreIcon("✅");
+  };
+
+  const handleAddTopic = () => {
+    if (!newTopicLabel.trim()) return;
+    onAddBalanceTopic({ label: newTopicLabel.trim(), icon: newTopicIcon.trim() || "⏳" });
+    setNewTopicLabel("");
+    setNewTopicIcon("⏳");
+  };
+
   const totalSessions = SUBJECTS.reduce((sum, s) => sum + ((stats[s.id] && stats[s.id].sessions) || 0), 0);
   const lastPlayed = stats.lastPlayed ? new Date(stats.lastPlayed).toLocaleString("ru-RU") : "ещё не занимался(ась)";
   const withData = chartData.filter((c) => c.accuracy > 0).sort((a, b) => a.accuracy - b.accuracy);
@@ -1380,9 +1716,20 @@ function ParentDashboard({ profile, stats, totalStars, chartData, activeChores, 
   const [newPassConfirm, setNewPassConfirm] = useState("");
   const [passMsg, setPassMsg] = useState("");
   const [showPassForm, setShowPassForm] = useState(false);
+  const importFileRef = useRef(null);
 
   const handlePayout = () => {
     if (window.confirm("Обнулить копилку после выдачи денег ребёнку?")) onPayout();
+  };
+
+  const handleImportClick = () => {
+    if (importFileRef.current) importFileRef.current.click();
+  };
+
+  const handleImportChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) onImportBackup(file);
+    e.target.value = "";
   };
 
   const handleChangePassword = () => {
@@ -1407,6 +1754,8 @@ function ParentDashboard({ profile, stats, totalStars, chartData, activeChores, 
         <StatCard label="Сессий" value={totalSessions} icon="✨" />
         <StatCard label="Копилка" value={stats.money.totalTenge + " ₸"} icon="📦" />
       </div>
+
+      <button onClick={onReviewContent} className="pixel-btn py-2 font-body text-xs bg-white" style={{ color: "#1b1b1b" }}>🔍 Проверить все задания</button>
 
       <div className="pixel-card p-4 flex flex-col gap-3">
         <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>📋 Ждут подтверждения сегодня</p>
@@ -1489,6 +1838,50 @@ function ParentDashboard({ profile, stats, totalStars, chartData, activeChores, 
       </div>
 
       <div className="pixel-card p-4 flex flex-col gap-2">
+        <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>🧹 Дела по дому — список</p>
+        <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>Можно добавлять свои, менять или удалять готовые</p>
+        {stats.chores.map((c) => (
+          <div key={c.id} className="flex items-center gap-2">
+            <input value={c.icon} onChange={(e) => onUpdateChore(c.id, { icon: e.target.value })} className="w-10 rounded-lg border-2 px-1 py-1 text-center font-body text-sm focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+            <input value={c.label} onChange={(e) => onUpdateChore(c.id, { label: e.target.value })} className="flex-1 rounded-lg border-2 px-2 py-1 font-body text-xs focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+            <button onClick={() => onDeleteChore(c.id)} className="pixel-btn px-2 py-1 text-xs bg-white" style={{ color: "#c0392b" }}>✕</button>
+          </div>
+        ))}
+        <div className="flex items-center gap-2 mt-1">
+          <input value={newChoreIcon} onChange={(e) => setNewChoreIcon(e.target.value)} placeholder="🙂" className="w-10 rounded-lg border-2 px-1 py-1 text-center font-body text-sm focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+          <input value={newChoreLabel} onChange={(e) => setNewChoreLabel(e.target.value)} placeholder="Новое дело" className="flex-1 rounded-lg border-2 px-2 py-1 font-body text-xs focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+          <button onClick={handleAddChore} className="pixel-btn px-3 py-1 text-xs text-white" style={{ background: "#4DA6FF" }}>+</button>
+        </div>
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>🌤️ Темы баланса дня</p>
+        <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>Без тем раздел не показывается ребёнку. Пример: «🎮 Компьютерные игры», «🍬 Сладости»</p>
+        {stats.balanceTopics.map((t) => (
+          <div key={t.id} className="flex items-center gap-2">
+            <span className="w-10 text-center">{t.icon}</span>
+            <span className="flex-1 font-body text-xs" style={{ color: "#1b1b1b" }}>{t.label}</span>
+            <button onClick={() => onDeleteBalanceTopic(t.id)} className="pixel-btn px-2 py-1 text-xs bg-white" style={{ color: "#c0392b" }}>✕</button>
+          </div>
+        ))}
+        <div className="flex items-center gap-2 mt-1">
+          <input value={newTopicIcon} onChange={(e) => setNewTopicIcon(e.target.value)} placeholder="⏳" className="w-10 rounded-lg border-2 px-1 py-1 text-center font-body text-sm focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+          <input value={newTopicLabel} onChange={(e) => setNewTopicLabel(e.target.value)} placeholder="Новая тема" className="flex-1 rounded-lg border-2 px-2 py-1 font-body text-xs focus:outline-none" style={{ borderColor: "#1b1b1b" }} />
+          <button onClick={handleAddTopic} className="pixel-btn px-3 py-1 text-xs text-white" style={{ background: "#8E7CC3" }}>+</button>
+        </div>
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
+        <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>💾 Резервная копия</p>
+        <p className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>Весь прогресс хранится только в этом браузере. Если сменится телефон или очистится кеш — данные пропадут без сохранённой копии. Рекомендуем скачивать копию раз в неделю.</p>
+        <div className="flex gap-2">
+          <button onClick={onExportBackup} className="pixel-btn flex-1 py-2 font-body text-xs bg-white" style={{ color: "#1b1b1b" }}>⬇️ Скачать копию</button>
+          <button onClick={handleImportClick} className="pixel-btn flex-1 py-2 font-body text-xs bg-white" style={{ color: "#1b1b1b" }}>⬆️ Загрузить копию</button>
+        </div>
+        <input ref={importFileRef} type="file" accept="application/json,.json" onChange={handleImportChange} style={{ display: "none" }} />
+      </div>
+
+      <div className="pixel-card p-4 flex flex-col gap-2">
         {!showPassForm ? (
           <button onClick={() => { setShowPassForm(true); setPassMsg(""); }} className="pixel-btn py-2 font-body text-xs bg-white" style={{ color: "#1b1b1b" }}>🔒 Сменить пароль</button>
         ) : (
@@ -1502,6 +1895,87 @@ function ParentDashboard({ profile, stats, totalStars, chartData, activeChores, 
           </div>
         )}
         {passMsg && <p className="font-body text-xs" style={{ color: passMsg.includes("✅") ? "#2e7d32" : "#c0392b" }}>{passMsg}</p>}
+      </div>
+    </div>
+  );
+}
+
+function ContentReminderModal({ onDismiss }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(27,27,27,0.55)" }}>
+      <div className="pop-in pixel-card p-6 flex flex-col items-center gap-3 text-center max-w-sm" style={{ background: "#FFF6D9" }}>
+        <span className="text-4xl">📚</span>
+        <h3 className="font-display text-base" style={{ color: "#1b1b1b" }}>Пора пополнить банк заданий?</h3>
+        <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>
+          Закончился (или вот-вот закончится) месяц — хороший момент попросить добавить новые задания и слегка усложнить материал по каждому предмету, ориентируясь на темп программы.
+        </p>
+        <button onClick={onDismiss} className="pixel-btn w-full py-2 font-display text-sm text-white" style={{ background: "#4DA6FF" }}>Понятно</button>
+      </div>
+    </div>
+  );
+}
+
+function ContentReview({ onBack }) {
+  const [subjectId, setSubjectId] = useState(SUBJECTS[0].id);
+  const subject = SUBJECTS.find((s) => s.id === subjectId);
+  const items = subject.words || subject.bank;
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <button onClick={onBack} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+        <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Все задания</span>
+        <span style={{ width: 36 }} />
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {SUBJECTS.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSubjectId(s.id)}
+            className="pixel-btn px-2.5 py-1.5 font-body text-xs flex items-center gap-1"
+            style={{ background: subjectId === s.id ? s.color : "white", color: subjectId === s.id ? "white" : "#1b1b1b" }}
+          >
+            <span>{s.icon}</span> {s.name}
+          </button>
+        ))}
+      </div>
+
+      <p className="font-body text-[10px] text-center" style={{ color: "#8a8a8a" }}>
+        Всего заданий в банке: {items.length} (уровень 1: {items.filter((it) => (it.level || 1) === 1).length}, уровень 2: {items.filter((it) => (it.level || 1) === 2).length})
+      </p>
+
+      <div className="flex flex-col gap-2">
+        {items.map((it, i) => (
+          <div key={it.id} className="pixel-card p-3 flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <span className="font-body text-[10px]" style={{ color: "#8a8a8a" }}>#{i + 1} {(it.level || 1) === 2 ? "· уровень 2" : ""}</span>
+            </div>
+            {subject.words ? (
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">{it.emoji}</span>
+                <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>{it.word}</span>
+                <span className="font-body text-xs" style={{ color: "#5a5a5a" }}>— {it.ru}</span>
+              </div>
+            ) : (
+              <>
+                {it.context && <p className="font-body text-[11px]" style={{ color: "#8a8a8a" }}>{it.context}</p>}
+                <p className="font-body text-sm" style={{ color: "#1b1b1b" }}>{it.prompt}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {it.options.map((opt, idx) => (
+                    <span
+                      key={idx}
+                      className="font-body text-xs px-2 py-1 rounded"
+                      style={{ background: idx === it.correct ? "#DFF5E1" : "#F3F3F3", color: "#1b1b1b" }}
+                    >
+                      {idx === it.correct ? "✓ " : ""}{opt}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
