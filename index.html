@@ -494,6 +494,11 @@ function pick(arr, n) {
   return copy.slice(0, Math.min(n, copy.length));
 }
 
+function shuffleOptions(q) {
+  const order = pick(q.options.map((_, i) => i), q.options.length);
+  return { ...q, options: order.map((i) => q.options[i]), correct: order.indexOf(q.correct) };
+}
+
 function randomPhrase(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -801,9 +806,10 @@ function App() {
   const startSession = (subj, bonus) => {
     const level = stats.levels[subj.id] || 1;
     const pool = poolForLevel(subj.bank, level);
-    const qs = subj.storyMode
+    const rawQs = subj.storyMode
       ? selectReadingStories(pool, stats.qstats[subj.id], subj.size)
       : selectSmart(pool, stats.qstats[subj.id], subj.size);
+    const qs = rawQs.map(shuffleOptions);
     setSubject(subj);
     setQuestions(qs);
     setQIndex(0);
