@@ -1731,22 +1731,58 @@ function ParentSetPassword({ value, setValue, confirm, setConfirm, error, onSubm
 function FactsScreen({ facts, onFactShown, quizAvailable, onStartQuiz, onHome }) {
   const [order, setOrder] = useState(() => pick(facts, facts.length));
   const [idx, setIdx] = useState(0);
+  const [finished, setFinished] = useState(false);
   const current = order[idx];
   const isLast = idx === order.length - 1;
   const catLabel = { football: "⚽ Футбол", countries: "🌍 Страны", history: "🏛️ История" };
 
   useEffect(() => {
-    if (current) onFactShown(current.id);
-  }, [current]);
+    if (current && !finished) onFactShown(current.id);
+  }, [current, finished]);
 
   const handleNext = () => {
     if (isLast) {
-      setOrder(pick(facts, facts.length));
-      setIdx(0);
+      setFinished(true);
     } else {
       setIdx((i) => i + 1);
     }
   };
+
+  const handleRestart = () => {
+    setOrder(pick(facts, facts.length));
+    setIdx(0);
+    setFinished(false);
+  };
+
+  if (finished) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <button onClick={onHome} className="pixel-btn bg-white p-2 text-sm">🏠</button>
+          <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Любопытный факт</span>
+          <span style={{ width: 36 }} />
+        </div>
+
+        <div className="pop-in pixel-card p-8 flex flex-col items-center gap-3 text-center" style={{ background: "#E3F2FD" }}>
+          <span className="text-6xl">🎉</span>
+          <p className="font-display text-base" style={{ color: "#1b1b1b" }}>Ты узнал все факты на сегодня!</p>
+          <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>Что дальше?</p>
+        </div>
+
+        <button onClick={handleRestart} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#4DA6FF" }}>
+          🔁 Заново
+        </button>
+
+        {quizAvailable ? (
+          <button onClick={onStartQuiz} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#8E7CC3" }}>
+            🎯 Пройти викторину
+          </button>
+        ) : (
+          <p className="font-body text-[10px] text-center" style={{ color: "#8a8a8a" }}>Викторина по фактам появится позже — она доступна раз в 7 дней.</p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -1755,13 +1791,6 @@ function FactsScreen({ facts, onFactShown, quizAvailable, onStartQuiz, onHome })
         <span className="font-display text-sm" style={{ color: "#1b1b1b" }}>Любопытный факт</span>
         <span style={{ width: 36 }} />
       </div>
-
-      {quizAvailable && (
-        <button onClick={onStartQuiz} className="pixel-btn p-3 flex items-center gap-2 text-left" style={{ background: "#FFF6D9" }}>
-          <span className="text-xl">🎯</span>
-          <span className="font-body text-xs" style={{ color: "#7a5a00" }}>Пройди викторину по фактам, которые уже узнал!</span>
-        </button>
-      )}
 
       <p className="font-body text-[10px] text-center" style={{ color: "#8a8a8a" }}>Факт {idx + 1} из {order.length} на сегодня — завтра будут новые</p>
 
@@ -1772,7 +1801,7 @@ function FactsScreen({ facts, onFactShown, quizAvailable, onStartQuiz, onHome })
       </div>
 
       <button onClick={handleNext} className="pixel-btn w-full py-3 font-display text-white text-lg" style={{ background: "#4DA6FF" }}>
-        {isLast ? "Заново →" : "Ещё факт →"}
+        {isLast ? "Готово →" : "Ещё факт →"}
       </button>
     </div>
   );
