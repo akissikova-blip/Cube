@@ -1530,8 +1530,8 @@ function LearnScreen({ subject, words, index, onNext, onHome }) {
 
       <div key={w.id} className="pop-in pixel-card p-8 flex flex-col items-center gap-3 text-center">
         <span className="text-6xl">{w.emoji}</span>
-        <p className="font-display text-3xl" style={{ color: "#1b1b1b" }}>{w.word}</p>
-        <p className="font-body text-sm" style={{ color: "#5a5a5a" }}>{w.ru}</p>
+        <p className="font-primer" style={{ color: "#1b1b1b", fontSize: "2rem" }}>{w.word}</p>
+        <p className="font-primer" style={{ color: "#5a5a5a", fontSize: "1.1rem" }}>{w.ru}</p>
         {!subject.noAudio && <button onClick={() => speak(w.word, subject.langCode)} className="pixel-btn bg-white px-3 py-2 text-lg">🔊 Слушать</button>}
       </div>
 
