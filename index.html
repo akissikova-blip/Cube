@@ -1436,7 +1436,7 @@ function QuizScreen({ subject, question, index, total, selected, onAnswer, onNex
         <div key={question.id} className="pop-in pixel-card p-6 flex flex-col items-center gap-4">
           <p className="font-body text-xs" style={{ color: "#5a5a5a" }}>Где это слово?</p>
           <div className="flex items-center gap-3">
-            <p className="font-display text-3xl" style={{ color: "#1b1b1b" }}>{question.word}</p>
+            <p className="font-primer" style={{ color: "#1b1b1b", fontSize: "2rem" }}>{question.word}</p>
             {!subject.noAudio && <button onClick={() => speak(question.word, subject.langCode)} className="pixel-btn bg-white px-2 py-2 text-lg">🔊</button>}
           </div>
           <div className="grid grid-cols-3 gap-2 w-full">
@@ -1449,7 +1449,7 @@ function QuizScreen({ subject, question, index, total, selected, onAnswer, onNex
               return (
                 <button key={idx} onClick={() => onAnswer(idx)} disabled={selected !== null} className="pixel-btn flex flex-col items-center gap-1 py-3 px-1" style={style}>
                   <span className="text-3xl">{opt.emoji}</span>
-                  <span className="font-body text-[11px]" style={{ color: "#1b1b1b" }}>{opt.ru}</span>
+                  <span className="font-primer" style={{ color: "#1b1b1b", fontSize: "0.85rem" }}>{opt.ru}</span>
                   {selected !== null && idx === question.correct && <span className="text-xs">✅</span>}
                   {selected !== null && idx === selected && idx !== question.correct && <span className="text-xs">❌</span>}
                 </button>
@@ -1484,7 +1484,7 @@ function QuizScreen({ subject, question, index, total, selected, onAnswer, onNex
       {question.context && <div className="pop-in pixel-card p-4 font-primer" style={{ color: "#1b1b1b" }}>{question.context}</div>}
 
       <div key={question.id} className="pop-in pixel-card p-6 flex flex-col gap-4">
-        <p className={question.context ? "font-primer text-center" : "font-display text-lg text-center"} style={{ color: "#1b1b1b", fontSize: question.context ? "1.15rem" : undefined }}>{question.prompt}</p>
+        <p className="font-primer text-center" style={{ color: "#1b1b1b", fontSize: "1.15rem" }}>{question.prompt}</p>
         <div className="flex flex-col gap-2">
           {question.options.map((opt, idx) => {
             let style = { borderColor: "#1b1b1b", background: "white", color: "#1b1b1b" };
@@ -1493,7 +1493,7 @@ function QuizScreen({ subject, question, index, total, selected, onAnswer, onNex
               else if (idx === selected) style = { borderColor: "#1b1b1b", background: "#FFE1DA", color: "#1b1b1b" };
             }
             return (
-              <button key={idx} onClick={() => onAnswer(idx)} disabled={selected !== null} className={"pixel-btn w-full text-left px-4 py-3 flex items-center justify-between " + (question.context ? "font-primer" : "font-body")} style={{ ...style, fontSize: question.context ? "1.05rem" : undefined }}>
+              <button key={idx} onClick={() => onAnswer(idx)} disabled={selected !== null} className="pixel-btn w-full text-left px-4 py-3 font-primer flex items-center justify-between" style={{ ...style, fontSize: "1.05rem" }}>
                 {opt}
                 {selected !== null && idx === question.correct && <span>✅</span>}
                 {selected !== null && idx === selected && idx !== question.correct && <span>❌</span>}
